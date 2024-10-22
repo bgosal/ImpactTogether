@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - ImpactTogether</title>
+    <link rel="stylesheet" href="../global.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="../index.html" class="nav-button-link">
+                <div class="website-name">ImpactTogether</div>
+            </a>
+        </nav>
+    </header>
+
+    <main class="form-container">
+        <h2>Create an Account</h2>
+        <form action="additional-details.html" method="GET">
+            <div class="form-group">
+                <label for="first-name">First Name:</label>
+                <input type="text" id="first-name" class="form-input" placeholder="Enter your first name" required>
+            </div>
+            <div class="form-group">
+                <label for="last-name">Last Name:</label>
+                <input type="text" id="last-name" class="form-input" placeholder="Enter your last name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+            </div>
+            <div class="form-group">
+                <label for="role">Registering as:</label>
+                <select id="role" class="form-input" required>
+                    <option value="volunteer">Volunteer</option>
+                    <option value="organizer">Event Organizer</option>
+                </select>
+            </div>
+            <button type="submit" class="form-button">Sign Up</button>
+            <p class="form-footer-text">
+                Already have an account? <a href="login.html">Login here</a>
+            </p>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 ImpactTogether. All rights reserved.</p>
+    </footer>
+</body>
+</html>
