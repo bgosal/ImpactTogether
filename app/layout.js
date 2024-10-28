@@ -1,7 +1,8 @@
 import { Navbar } from "@components/NavBar";
 import { Footer } from "@components/Footer"
 import { Righteous } from 'next/font/google'
-import "./globals.css";
+import "./css/globals.css";
+import "./css/event.css";
 
 export const metadata = {
   title: "ImpactTogether",
@@ -11,7 +12,6 @@ export const metadata = {
 const righteous = Righteous({
   subsets: ['latin'],
   weight: '400'
-  
 });
 
 export default function RootLayout({ children }) {
@@ -20,8 +20,7 @@ export default function RootLayout({ children }) {
       <body>
         <Navbar />
           {children}
-        <Footer />
-        
+        <Footer /> 
       </body>
     </html>
   );

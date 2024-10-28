@@ -1,4 +1,3 @@
-import { IoPersonCircleSharp } from "react-icons/io5";
 import Link from "next/link";
 
 export const Navbar = () => {
@@ -8,23 +7,25 @@ export const Navbar = () => {
         <Link className="nav-button-link" href="/"><div className="website-name">ImpactTogether</div></Link>
         
         <div className="nav-right">
-          <Link className="nav-button-link" href="/events">
+          <Link className="nav-button-link" href="/saved">
             <button className="nav-button">Saved Opportunities</button>
           </Link>
 
-          <Link className="nav-button-link" href="recruit.html">
+          <Link className="nav-button-link" href="/recruit">
             <button className="nav-button">Recruit Volunteers</button>
           </Link>
 
-          <Link className="nav-button-link" href="/account_management/account_management.html">
-            <button className="nav-button">Account Management</button>
+          <Link className="nav-button-link" href="/account-management">
+            <button className="nav-button">My Account</button>
           </Link>
 
-          <Link className="nav-button-link" href="/login/login.html">
+          <Link className="nav-button-link" href="/login">
             <button className="nav-button">Login</button>
           </Link>
 
-          <IoPersonCircleSharp className=""/>
+          <Link className="nav-button-link" href="/register">
+            <button className="nav-button">Register</button>
+          </Link>
         </div>
       </nav>
     </header> 

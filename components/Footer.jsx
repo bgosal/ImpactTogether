@@ -1,7 +1,7 @@
 export const Footer = () => {
   return (
     <footer>
-      <p>&copy; 2024 ImpactTogether</p>
+      <p>ImpactTogether &#40;Comp 370&#41;</p>
     </footer>
   )
 }
