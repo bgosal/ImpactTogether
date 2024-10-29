@@ -1,8 +1,10 @@
 import { Navbar } from "@components/NavBar";
 import { Footer } from "@components/Footer"
 import { Righteous } from 'next/font/google'
+
 import "./css/globals.css";
 import "./css/event.css";
+import "./css/authentication.css";
 
 export const metadata = {
   title: "ImpactTogether",

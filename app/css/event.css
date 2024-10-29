@@ -54,11 +54,6 @@
   background-color:  #FFA500;
 }
 
-.contact-button {
-  background-color: transparent;
-  border: 2px solid #FFA500; 
-  color: #FFA500; 
-}
 
 .contact-button, .apply-now-button {
   display: inline-block;
@@ -72,6 +67,13 @@
 
   font-size: 18px
 }
+
+.contact-button {
+  background-color: #fff;
+  border: 2px solid #FFA500; 
+  color: #FFA500; 
+}
+
 
 .contact-button:hover, .apply-now-button:hover {
   background-color: #0056b3;
