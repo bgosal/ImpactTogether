@@ -48,7 +48,7 @@ main {
   color: white;
 }
 
-.nav-button {
+.nav-button, .nav-button-sign-out {
   background-color: #ffffff; 
   color: #5783c4; 
   border: 2px solid #5783c4; 
@@ -61,8 +61,18 @@ main {
   transition: background-color 0.3s, color 0.3s; 
 }
 
+.nav-button-sign-out {
+  color: red;
+  border-color: red;
+}
+
 .nav-button:hover {
   background-color: #5783c4; 
+  color: #ffffff; 
+}
+
+.nav-button-sign-out:hover {
+  background-color: red; 
   color: #ffffff; 
 }
 
