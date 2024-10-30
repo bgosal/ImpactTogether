@@ -89,9 +89,9 @@ label {
 }
 
 .signup-button:hover {
-  background-color: #0056b3; 
+  background-color: #FFA500;; 
   color: #fff;
-  border-color: #0056b3; 
+  border-color: #FFA500;; 
 }
 .registration-selection {
   display: flex;

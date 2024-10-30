@@ -1,5 +1,7 @@
-import { Navbar } from "@components/NavBar";
+import { Provider } from "@components/Provider"
+import { Navbar } from "@components/NavBar"
 import { Footer } from "@components/Footer"
+
 import { Righteous } from 'next/font/google'
 
 import "./css/globals.css";
@@ -21,9 +23,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={righteous.className}>
       <body>
-        <Navbar />
-          {children}
-        <Footer /> 
+        <Provider>
+          <Navbar />
+            {children}
+          <Footer /> 
+        </Provider>
       </body>
     </html>
   );
