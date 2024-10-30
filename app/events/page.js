@@ -26,9 +26,11 @@ export default function Events() {
             <h1 className="event-title">Community Garden Volunteer Program</h1>
             <p className="organization-name">GreenThumb Initiative</p>
             <div className="button-group">
-              <button className="apply-now-button">
-                <i className="fas fa-check"></i> Apply Now
-              </button>
+              <Link href="/apply">
+                <button className="apply-now-button">
+                  <i className="fas fa-check"></i> Apply Now
+                </button>
+              </Link>
               <button className="contact-button">
                 <i className="fas fa-envelope"></i> Contact
               </button>        
