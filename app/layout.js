@@ -7,6 +7,8 @@ import { Righteous } from 'next/font/google'
 import "./css/globals.css";
 import "./css/event.css";
 import "./css/authentication.css";
+import "./css/account-management.css"
+import "./css/organization-management.css"
 
 export const metadata = {
   title: "ImpactTogether",

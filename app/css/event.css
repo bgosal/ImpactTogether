@@ -103,7 +103,7 @@
   align-items: center;
   margin-bottom: 15px;
   font-size: 22px; 
-  color: #666; 
+  color: #666;
 }
 
 .event-detail i,
@@ -138,4 +138,19 @@
   color: #5783c4;
   margin-bottom: 15px;
   font-size: 28px; 
+}
+
+.large-input {
+  width: 100%;
+  height: 150px;
+  font-size: 18px;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.detail-center {
+  justify-content: center;
 }

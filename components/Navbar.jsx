@@ -27,6 +27,10 @@ export const Navbar = () => {
                 <button className="nav-button">My Account</button>
               </Link>
 
+              <Link className="nav-button-link" href="/organization-management">
+                <button className="nav-button">My Organization</button>
+              </Link>
+
               <button 
                 className="nav-button-sign-out"
                 onClick={() => signOut()}
@@ -43,6 +47,9 @@ export const Navbar = () => {
               <Link className="nav-button-link" href="/register">
                 <button className="nav-button">Register</button>
               </Link>
+
+            
+
             </>
           )}          
         </div>
