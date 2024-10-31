@@ -18,7 +18,7 @@ export const Item = ({ title, description, img }) => {
         </div>
         <div className="item-buttons">
           <Link href="/events">
-            <button className="item-button">Volunteer</button>
+            <button className="item-button">View Details</button>
           </Link>
         </div>
       </div>  
