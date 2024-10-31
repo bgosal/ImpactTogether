@@ -1,4 +1,28 @@
+Levi de Greeff 300171992 <br>
+Bhupinder Gosal 300140608 <br>
+Jasraj Gosal 300192696 <br>
+Taylor Young 300191437 <br>
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+## Before Getting Started
+Make sure to download [NodeJS](https://nodejs.org/en) to run javascript.
+
+Then install the required modules of the repository using:
+
+```bash
+npm install
+```
+
+After that, create a new file in the root of the directory named ".env" and paste the following:
+
+```bash
+MONGODB_URL=<LINK>
+NEXTAUTH_SECRET=<SECRET>
+NEXTAUTH_URL=http://localhost:3000
+```
+
+** CODES WILL BE SUPPLIED IN PRIVATE FOR SECURITY REASONS **
 
 ## Getting Started
 
