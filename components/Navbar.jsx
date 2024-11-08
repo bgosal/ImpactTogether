@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
@@ -12,24 +12,42 @@ export const Navbar = () => {
         <Link className="nav-button-link" href="/"><div className="website-name">ImpactTogether</div></Link>
         
         <div className="nav-right">
-          {/* If user is logged in, show these links, otherwise show the other links */}
+          
           {session ? (
             <>
-              <Link className="nav-button-link" href="/saved">
-                <button className="nav-button">Saved Opportunities</button>
-              </Link>
+              
+              {session.user.role === "volunteer" && (
+                <Link className="nav-button-link" href="/saved">
+                  <button className="nav-button">Saved Opportunities</button>
+                </Link>
+              )}
 
-              <Link className="nav-button-link" href="/recruit">
-                <button className="nav-button">Recruit Volunteers</button>
-              </Link>
+              {session.user.role === "organizer" && (
+                <Link className="nav-button-link" href=" ">
+                  <button className="nav-button">Manage Events</button>
+                </Link>
+              )}
 
-              <Link className="nav-button-link" href="/account-management">
-                <button className="nav-button">My Account</button>
-              </Link>
+              
+              {session.user.role === "organizer" && (
+                <Link className="nav-button-link" href="/recruit">
+                  <button className="nav-button">Create New Event</button>
+                </Link>
+              )}
 
-              <Link className="nav-button-link" href="/organization-management">
-                <button className="nav-button">My Organization</button>
-              </Link>
+             
+              {session.user.role === "volunteer" && (
+                <Link className="nav-button-link" href="/account-management">
+                  <button className="nav-button">My Account</button>
+                </Link>
+              )}
+
+            
+              {session.user.role === "organizer" && (
+                <Link className="nav-button-link" href="/organization-management">
+                  <button className="nav-button">My Organization</button>
+                </Link>
+              )}
 
               <button 
                 className="nav-button-sign-out"
@@ -47,13 +65,10 @@ export const Navbar = () => {
               <Link className="nav-button-link" href="/register">
                 <button className="nav-button">Register</button>
               </Link>
-
-            
-
             </>
           )}          
         </div>
       </nav>
     </header> 
-  )
-}
+  );
+};

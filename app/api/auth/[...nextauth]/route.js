@@ -13,7 +13,7 @@ const handler = NextAuth({
           throw new Error("Invalid email or password");
         }
 
-        await connectToDB()
+        await connectToDB();
 
         const user = await User.findOne({ email: credentials.email });
 
@@ -27,7 +27,7 @@ const handler = NextAuth({
           throw new Error("Invalid password");
         }
 
-        return user
+        return user;
       },
     }),
   ],
@@ -35,15 +35,22 @@ const handler = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
 
   callbacks: {
-    async session({session}) {
-      const mongodbUser = await User.findOne({ email: session.user.email })
-      session.user.id = mongodbUser._id.toString()
+    async jwt({ token, user }) {
+      
+      if (user) {
+        const mongodbUser = await User.findOne({ email: user.email });
+        token.role = mongodbUser.role;
+      }
+      return token;
+    },
 
-      session.user = {...session.user, ...mongodbUser._doc}
-
-      return session
-    }
-  }
+    async session({ session, token }) {
+      
+      session.user.id = token.sub;
+      session.user.role = token.role; 
+      return session;
+    },
+  },
 });
 
 export { handler as GET, handler as POST };
