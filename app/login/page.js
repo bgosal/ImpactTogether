@@ -30,9 +30,9 @@ export default function Login() {
       <h2>Welcome to ImpactTogether</h2>
 
       <div className="login-form-container">
-        
         <div className="form-fields" onSubmit={handleSubmit(onSubmit)}>
           <form className="login-form">
+
             {/* Email */}
             <div className="form-group">
               <label htmlFor="email">Email:</label>
@@ -51,7 +51,7 @@ export default function Login() {
             <div className="form-group">
               <label htmlFor="password">Password:</label>
               <input
-              defaultValue=""
+                defaultValue=""
                 {...register("password", {
                   required: "Password is required",
                   validate: (value) => {
@@ -71,11 +71,7 @@ export default function Login() {
               {errors.password && <p style={{color: "red"}}>{errors.password.message}</p>}
             </div>
 
-            <button 
-              className="login-button"
-            >
-              Login
-            </button>
+            <button className="login-button">Login</button>
           </form>
         </div>
         

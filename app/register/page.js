@@ -30,7 +30,7 @@ export default function Register() {
       delete data.organizationName;
     }
   
-    const res = await fetch("/api/auth/register", {
+    const res = await fetch("/api/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -39,15 +39,14 @@ export default function Register() {
     });
   
     if (res.ok) {
-      router.push("/");
+      router.push("/login");
     }
   };
   
 
   return (
     <main className="registration-selection">
-      <h2>Create an Account</h2>
-      
+      <h2>Create an Account</h2> 
       
       <div className="role-selection">
         <div
@@ -65,9 +64,7 @@ export default function Register() {
       </div>
 
       <div className="form-container">
-        <form className="register-form" onSubmit={handleSubmit(onSubmit)}>
-          
-          
+        <form className="register-form" onSubmit={handleSubmit(onSubmit)}>      
           {role === "volunteer" && (
             <>
               <div className="form-group">
@@ -111,8 +108,7 @@ export default function Register() {
               </div>
             </>
           )}
-
-          
+ 
           <div className="form-group">
             <label htmlFor="email">Email:</label>
             <input

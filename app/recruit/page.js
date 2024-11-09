@@ -58,7 +58,7 @@ export default function Recruit() {
     
 
     try {
-      const response = await fetch('/api/auth/event', {
+      const response = await fetch('/api/event', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

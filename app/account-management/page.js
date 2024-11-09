@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { FiUserCheck, FiCamera, FiMail, FiPhone, FiMapPin, FiUser, FiEdit, FiCheck, FiX } from "react-icons/fi";
 import { MdEvent, MdSchool, MdLanguage, MdStar, MdCheckCircle, MdHistory, MdFavorite, MdFlag } from "react-icons/md";
+import Loader from "@components/Loader";
 
 export default function Profile() {
     const { data: session } = useSession();
@@ -24,7 +25,7 @@ export default function Profile() {
             }
 
             try {
-                const response = await fetch(`/api/auth/profile?id=${session.user.id}`);
+                const response = await fetch(`/api/profile?id=${session.user.id}`);
                 if (!response.ok) {
                     throw new Error("Failed to fetch user data");
                 }
@@ -72,7 +73,7 @@ export default function Profile() {
         }
 
         try {
-            const response = await fetch(`/api/auth/profile`, {
+            const response = await fetch(`/api/profile`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -114,7 +115,7 @@ export default function Profile() {
         const updatedValue = tempUser[field]?.filter(item => item.trim() !== "") || []; 
     
         try {
-            const response = await fetch(`/api/auth/profile`, {
+            const response = await fetch(`/api/profile`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -144,7 +145,7 @@ export default function Profile() {
         setEditStates((prev) => ({ ...prev, [field]: false }));
     };
 
-    if (loading) return <p>Loading profile...</p>;
+    if (loading) return <Loader />;
     if (error) return <p>{error}</p>;
     if (!user) return <p>No profile data available.</p>;
 

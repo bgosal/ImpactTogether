@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FiCamera, FiEdit, FiCheck, FiX, FiMail, FiPhone, FiMapPin, FiGlobe, FiUser } from "react-icons/fi";
 import { MdEvent, MdHistory, MdStar, MdBusiness } from "react-icons/md";
+import Loader from "@components/Loader";
 
 export default function OrganizerProfile() {
     const { data: session } = useSession();
@@ -29,7 +30,7 @@ export default function OrganizerProfile() {
             }
 
             try {
-                const response = await fetch(`/api/auth/profile?id=${session.user.id}`);
+                const response = await fetch(`/api/profile?id=${session.user.id}`);
                 
                 if (!response.ok) {
                     throw new Error("Failed to fetch organizer data");
@@ -91,7 +92,7 @@ export default function OrganizerProfile() {
         }
         
         try {
-            const response = await fetch(`/api/auth/profile`, {
+            const response = await fetch(`/api/profile`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -148,7 +149,7 @@ export default function OrganizerProfile() {
                 .map(item => item.trim())
                 .filter(item => item !== ""); 
     
-            const response = await fetch(`/api/auth/profile`, {
+            const response = await fetch(`/api/profile`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -183,7 +184,7 @@ export default function OrganizerProfile() {
         setTempAchievements(organizer.achievements?.join("\n"));
     };
 
-    if (session === undefined || loading) return <p>Loading organizer profile...</p>;
+    if (loading) return <Loader />
     if (error) return <p>{error}</p>;
     if (!organizer) return <p>No organizer data available.</p>;
 

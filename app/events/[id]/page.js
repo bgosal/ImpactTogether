@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { FiCheck, FiMail, FiCalendar, FiClock, FiMapPin, FiInfo, FiList, FiFileText } from "react-icons/fi";
+import Loader from "@components/Loader";
 
 export default function EventDetails() {
   const router = useRouter();
@@ -18,7 +19,7 @@ export default function EventDetails() {
 
     const fetchEvent = async () => {
       try {
-        const response = await fetch(`/api/auth/event?id=${id}`);
+        const response = await fetch(`/api/event?id=${id}`);
         if (!response.ok) throw new Error("Failed to fetch event details");
 
         const data = await response.json();
@@ -50,7 +51,7 @@ export default function EventDetails() {
     return `${formattedHour}:${minutes} ${period}`;
   };
 
-  if (loading) return <p>Loading event details...</p>;
+  if (loading) return <Loader />
   if (error) return <p>{error}</p>;
   if (!event) return <p>No event details available.</p>;
 

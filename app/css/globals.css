@@ -268,3 +268,29 @@ footer {
 .item-button:hover {
   background-color: #0056b3;
 }
+
+/* Loader */
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.loading-spinner {
+  height: 3rem;
+  width: 3rem;
+  border: 4px solid transparent;
+  border-top-color: gray;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

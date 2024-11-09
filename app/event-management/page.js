@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { FiCalendar, FiClock, FiMapPin } from "react-icons/fi";
+import Loader from "@components/Loader";
 
 export default function OrganizerEventsList() {
   const { data: session } = useSession();
@@ -32,7 +33,7 @@ export default function OrganizerEventsList() {
       if (!session?.user?.id) return;
 
       try {
-        const response = await fetch(`/api/auth/event?organizerId=${encodeURIComponent(session.user.id)}`);
+        const response = await fetch(`/api/event?organizerId=${encodeURIComponent(session.user.id)}`);
         if (!response.ok) throw new Error("Failed to fetch events");
 
         const data = await response.json();
@@ -48,7 +49,7 @@ export default function OrganizerEventsList() {
     fetchEvents();
   }, [session]);
 
-  if (loading) return <p>Loading events...</p>;
+  if (loading) return <Loader />;
   if (error) return <p>{error}</p>;
 
   const currentDate = new Date();
@@ -234,7 +235,9 @@ export default function OrganizerEventsList() {
                   </div>
                   <div className="event-buttons">
                     <button>Edit Event</button>
-                    <button>View Participants</button>
+                    <Link href={`/participants/${event._id}`}>
+                      <button>View Participants</button>
+                    </Link>
                     <button>Cancel Event</button>
                   </div>
                 </li>
