@@ -50,13 +50,11 @@ const EventSchema = new mongoose.Schema({
     required: true,
   },
   requirements: {
-    type: String,
-    default: null,
+    type: [String], 
+    default: [],
+    
   },
-  activities: {
-    type: String,
-    default: null,
-  },
+
   createdAt: {
     type: Date,
     default: Date.now,

@@ -10,6 +10,7 @@ import "./css/authentication.css";
 import "./css/account-management.css"
 import "./css/organization-management.css"
 import "./css/listing.css"
+import "./css/event-management.css"
 
 export const metadata = {
   title: "ImpactTogether",

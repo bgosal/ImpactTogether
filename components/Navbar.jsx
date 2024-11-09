@@ -23,17 +23,19 @@ export const Navbar = () => {
               )}
 
               {session.user.role === "organizer" && (
-                <Link className="nav-button-link" href=" ">
+                <Link className="nav-button-link" href="/recruit">
+                  <button className="nav-button">Create New Event</button>
+                </Link>
+              )}
+
+              {session.user.role === "organizer" && (
+                <Link className="nav-button-link" href="/event-management">
                   <button className="nav-button">Manage Events</button>
                 </Link>
               )}
 
               
-              {session.user.role === "organizer" && (
-                <Link className="nav-button-link" href="/recruit">
-                  <button className="nav-button">Create New Event</button>
-                </Link>
-              )}
+              
 
              
               {session.user.role === "volunteer" && (

@@ -1,7 +1,38 @@
+import { NextResponse } from "next/server";
 import { connectToDB } from "@lib/mongodb";
 import Event from "@models/Event";
 
-export const POST = async (req) => {
+
+export async function GET(req) {
+  try {
+    await connectToDB();
+
+    const { searchParams } = new URL(req.url);
+    const organizerId = searchParams.get("organizerId");
+    const eventId = searchParams.get("id");
+
+    if (eventId) {
+      
+      const event = await Event.findById(eventId).lean();
+      if (!event) {
+        return NextResponse.json({ message: "Event not found" }, { status: 404 });
+      }
+      return NextResponse.json(event, { status: 200 });
+    } else if (organizerId) {
+      
+      const events = await Event.find({ organizer: organizerId }).lean();
+      return NextResponse.json(events, { status: 200 });
+    } else {
+      return NextResponse.json({ message: "Organizer ID or Event ID is required" }, { status: 400 });
+    }
+  } catch (error) {
+    console.error("Error fetching event(s):", error);
+    return NextResponse.json({ message: "Failed to fetch event(s)" }, { status: 500 });
+  }
+}
+
+
+export async function POST(req) {
   try {
     await connectToDB();
 
@@ -9,10 +40,9 @@ export const POST = async (req) => {
     const { eventName, category, date, startTime, address, location, description, requirements, activities, organizer } = body;
 
     if (!organizer) {
-      return new Response("Organizer ID is required", { status: 400 });
+      return NextResponse.json({ message: "Organizer ID is required" }, { status: 400 });
     }
 
-   
     const newEvent = await Event.create({
       eventName,
       category,
@@ -21,14 +51,13 @@ export const POST = async (req) => {
       address,
       location,
       description,
-      requirements: requirements || null,
-      activities: activities || null,
-      organizer, 
+      requirements,
+      organizer,
     });
 
-    return new Response(JSON.stringify(newEvent), { status: 200 });
+    return NextResponse.json(newEvent, { status: 200 });
   } catch (error) {
     console.error("Error creating event:", error);
-    return new Response("Failed to create a new event", { status: 500 });
+    return NextResponse.json({ message: "Failed to create a new event" }, { status: 500 });
   }
-};
+}

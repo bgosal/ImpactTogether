@@ -21,8 +21,7 @@ export default function Recruit() {
     address: '',
     location: '',
     description: '',
-    requirements: '',
-    activities: '',
+    requirements: ''
   });
 
   const [error, setError] = useState(null); 
@@ -38,11 +37,25 @@ export default function Recruit() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!organizerId) {
       setError("You must be logged in to create an event.");
       return;
     }
+  
+    
+    const formattedRequirements = formData.requirements
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line)
+      .join('\n');
+
+    
+    const formattedDescription = formData.description
+      .replace(/\s+/g, ' ') 
+      .trim(); 
+
+    
 
     try {
       const response = await fetch('/api/auth/event', {
@@ -50,7 +63,10 @@ export default function Recruit() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          organizer: organizerId, 
+          organizer: organizerId,
+          requirements: formattedRequirements,
+          description: formattedDescription,
+         
         }),
       });
 
@@ -62,7 +78,6 @@ export default function Recruit() {
       const result = await response.json();
       console.log("Event created:", result);
 
-      
       setSuccess(true);
       setError(null);
       setFormData({
@@ -73,8 +88,7 @@ export default function Recruit() {
         address: '',
         location: '',
         description: '',
-        requirements: '',
-        activities: '',
+        requirements: ''
       });
 
     } catch (error) {
@@ -83,23 +97,17 @@ export default function Recruit() {
       setSuccess(false);
     }
   };
+  
   return (
     <main>
       <div className="event-form-container">
-        <div className="form-heading">
-          
-          Create New Event
-        </div>
+        <div className="form-heading">Create New Event</div>
         <form onSubmit={handleSubmit}>
-          
-         
           <section className="event-details-section">
             <div className="section-heading">
               <FaInfoCircle className="icon-heading" />
               <span className="section-heading-text">Event Details</span>
             </div>
-            
-            
             <div className="event-input-group">
               <label htmlFor="eventName"><FaBuilding className="icon-heading" /> Event Name</label>
               <input
@@ -113,8 +121,6 @@ export default function Recruit() {
                 onChange={handleChange}
               />
             </div>
-            
-            
             <div className="event-input-group">
               <label htmlFor="category"><FaListAlt className="icon-heading" /> Category</label>
               <select
@@ -136,8 +142,6 @@ export default function Recruit() {
                 <option value="arts">Arts & Culture</option>
               </select>
             </div>
-            
-           
             <div className="event-input-group">
               <label htmlFor="date"><FaCalendarAlt className="icon-heading" /> Date</label>
               <input
@@ -151,8 +155,6 @@ export default function Recruit() {
                 onChange={handleChange}
               />
             </div>
-            
-            
             <div className="event-input-group">
               <label htmlFor="startTime"><FaClock className="icon-heading" /> Start Time</label>
               <input
@@ -165,8 +167,6 @@ export default function Recruit() {
                 onChange={handleChange}
               />
             </div>
-            
-            
             <div className="event-input-group">
               <label htmlFor="address"><FaMapMarkerAlt className="icon-heading" /> Address</label>
               <input
@@ -180,8 +180,6 @@ export default function Recruit() {
                 onChange={handleChange}
               />
             </div>
-            
-            
             <div className="event-input-group">
               <label htmlFor="location"><FaMapMarkerAlt className="icon-heading" /> Location</label>
               <select
@@ -204,12 +202,8 @@ export default function Recruit() {
               </select>
             </div>
           </section>
-
-         
           <section className="event-description-section">
             <div className="section-heading"><FaTasks className="icon-heading" /> Event Description</div>
-            
-            
             <div className="event-input-group">
               <label htmlFor="description"><FaInfoCircle className="icon-heading" /> Event Description</label>
               <textarea
@@ -223,8 +217,6 @@ export default function Recruit() {
                 onChange={handleChange}
               ></textarea>
             </div>
-            
-           
             <div className="event-input-group">
               <label htmlFor="requirements"><FaTasks className="icon-heading" /> Event Requirements</label>
               <textarea
@@ -238,22 +230,7 @@ export default function Recruit() {
               ></textarea>
             </div>
             
-          
-            <div className="event-input-group">
-              <label htmlFor="activities"><FaListAlt className="icon-heading" /> Activities Involved</label>
-              <textarea
-                id="activities"
-                name="activities"
-                className="event-input-field"
-                placeholder="List activities involved"
-                rows="3"
-                value={formData.activities}
-                onChange={handleChange}
-              ></textarea>
-            </div>
           </section>
-
-         
           <button type="submit" className="event-submit-button">Create Listing</button>
         </form>
       </div>
