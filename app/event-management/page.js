@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { FiCalendar, FiClock, FiMapPin } from "react-icons/fi";
+import Image from "next/image";
+import { FiCalendar, FiClock, FiMapPin, FiTrash } from "react-icons/fi";
 import Loader from "@components/Loader";
 
 export default function OrganizerEventsList() {
@@ -25,6 +26,9 @@ export default function OrganizerEventsList() {
   const [sortBy, setSortBy] = useState("date");
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isParticipantsOpen, setIsParticipantsOpen] = useState(false);
+
+  const [event, setEvent] = useState();
 
   const eventsPerPage = 3;
 
@@ -109,19 +113,61 @@ export default function OrganizerEventsList() {
     setIsFilterOpen(!isFilterOpen);
   };
 
+  const handleParticipants = (event) => {
+    setIsParticipantsOpen(!isParticipantsOpen);
+    setEvent(event);
+  }
+
   return (
     <main>
+      {/* Pop-up */}
+      {isParticipantsOpen && (
+        <div className="popup-overlay">
+          <div className="popup">
+            <button 
+              className="close-popup" 
+              onClick={handleParticipants}
+            >
+              X
+            </button>
+
+            <h2 style={{background: "none"}}>Participants</h2>
+
+            <div className="participants-list">
+              {event.participants.map((participant, i) => (
+                <div key={`${event._id}-${i}`} className="participant-item">
+                  <Image 
+                    src={"https://dummyimage.com/100"}
+                    alt="" // {event.participants[i].firstname}
+                    width={100} 
+                    height={100}
+                    className="participant-image"
+                  />
+                  <div className="participant-info">
+                    <h3 className="participant-name">{/* event.participants[i].firstname */}</h3>
+                  </div>
+                  <button
+                    className="remove-participant"
+                    onClick={() => handleDeleteParticipant(event._id, participant)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="title-container">
         <header className="manage-events-heading">Manage Events</header>
       </div>
-
       
       <div className="filter-header">
         <button className="filter-toggle" onClick={toggleFilterPanel}>
           Filter
         </button>
       </div>
-
      
       {isFilterOpen && (
         <div className="filter-panel">
@@ -164,8 +210,7 @@ export default function OrganizerEventsList() {
           </label>
         </div>
       )}
-
-      
+    
       <section className="events-section">
         <header className="events-section-heading upcoming-heading" onClick={() => setShowUpcoming(!showUpcoming)}>
           Upcoming Events {showUpcoming ? "▲" : "▼"}
@@ -189,7 +234,7 @@ export default function OrganizerEventsList() {
                   </div>
                   <div className="event-buttons">
                     <button>Edit Event</button>
-                    <button>View Participants</button>
+                    <button onClick={() => handleParticipants(event)}>View Participants</button>
                     <button>Cancel Event</button>
                   </div>
                 </li>
@@ -235,9 +280,7 @@ export default function OrganizerEventsList() {
                   </div>
                   <div className="event-buttons">
                     <button>Edit Event</button>
-                    <Link href={`/participants/${event._id}`}>
-                      <button>View Participants</button>
-                    </Link>
+                    <button onClick={() => handleParticipants(event)}>View Participants</button>
                     <button>Cancel Event</button>
                   </div>
                 </li>

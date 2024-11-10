@@ -64,6 +64,10 @@ const EventSchema = new mongoose.Schema({
     ref: "User", 
     required: true 
   }, 
+  participants: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User"}],
+    default: []
+  },
 });
 
 const Event = mongoose.models.Event || mongoose.model("Event", EventSchema);
