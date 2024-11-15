@@ -113,10 +113,29 @@ export default function OrganizerEventsList() {
     setIsFilterOpen(!isFilterOpen);
   };
 
-  const handleParticipants = (event) => {
-    setIsParticipantsOpen(!isParticipantsOpen);
-    setEvent(event);
-  }
+  const handleParticipants = async (selectedEvent) => {
+    
+    try {
+      const response = await fetch(`/api/event?id=${encodeURIComponent(selectedEvent._id)}`);
+      if (response.ok) {
+        const eventData = await response.json();
+        setEvent(eventData);  
+        setIsParticipantsOpen(true);
+      } else {
+        console.error("Failed to fetch participants");
+      }
+    } catch (err) {
+      console.error("Error fetching participants:", err);
+    }
+  };
+
+
+  const closeParticipants = () => {
+    setIsParticipantsOpen(false);
+  };
+
+  
+  
 
   return (
     <main>
@@ -124,10 +143,7 @@ export default function OrganizerEventsList() {
       {isParticipantsOpen && (
         <div className="popup-overlay">
           <div className="popup">
-            <button 
-              className="close-popup" 
-              onClick={handleParticipants}
-            >
+          <button className="close-popup" onClick={closeParticipants}>
               X
             </button>
 
@@ -135,26 +151,27 @@ export default function OrganizerEventsList() {
 
             <div className="participants-list">
               {event.participants.map((participant, i) => (
-                <div key={`${event._id}-${i}`} className="participant-item">
+                <div key={`${event._id}-${participant._id}`} className="participant-item">
                   <Image 
-                    src={"https://dummyimage.com/100"}
-                    alt="" // {event.participants[i].firstname}
+                    src={participant.profilePicture || "https://dummyimage.com/100"} 
+                    alt={`${participant.firstname} ${participant.lastname}`}
                     width={100} 
                     height={100}
                     className="participant-image"
                   />
                   <div className="participant-info">
-                    <h3 className="participant-name">{/* event.participants[i].firstname */}</h3>
+                    <h3 className="participant-name">{`${participant.firstname} ${participant.lastname}`}</h3>
                   </div>
                   <button
                     className="remove-participant"
-                    onClick={() => handleDeleteParticipant(event._id, participant)}
+                    onClick={() => handleDeleteParticipant(event._id, participant._id)}
                   >
                     Remove
                   </button>
                 </div>
               ))}
             </div>
+
           </div>
         </div>
       )}
@@ -285,14 +302,14 @@ export default function OrganizerEventsList() {
                     <FiMapPin /> {event.location}
                   </div>
                   <div className="event-buttons">
-                    <button>Edit Event</button>
+                    
                     <button 
                       onClick={() => handleParticipants(event)}  
                       className="view-participants-button"
                     >
                       View Participants
                     </button>
-                    <button>Cancel Event</button>
+                    
                   </div>
                 </li>
               ))}

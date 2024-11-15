@@ -11,7 +11,10 @@ export async function GET(req) {
     const eventId = searchParams.get("id");
 
     if (eventId) {
-      const event = await Event.findById(eventId).lean();
+
+      const event = await Event.findById(eventId).populate("participants", "_id firstname lastname profilePicture");
+
+      
       if (!event) {
         return NextResponse.json({ message: "Event not found" }, { status: 404 });
       }
@@ -27,6 +30,7 @@ export async function GET(req) {
     return NextResponse.json({ message: "Failed to fetch event(s)" }, { status: 500 });
   }
 }
+
 
 export async function POST(req) {
   try {
@@ -81,3 +85,5 @@ export async function PUT(req) {
     return NextResponse.json({ message: "Failed to update event" }, { status: 500 });
   }
 }
+
+
