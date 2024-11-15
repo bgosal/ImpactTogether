@@ -347,8 +347,8 @@
 }
 
 .change-picture-button:hover {
-    color: #cc7a00; 
-    border-color: #cc7a00;
+    background-color: #FFA500; 
+    color:#fff;
 }
 
 
@@ -415,5 +415,18 @@
     font-size: 50px; 
 }
 
+
+.delete-picture-button{
+    margin-top: 20px;
+    background-color: white; 
+    color: red;
+    border-radius: 5px;
+    border: 2px solid red; 
+  }
+  .delete-picture-button:hover{
+    background-color: red; 
+    color:#fff;
+  }
+  
 
 

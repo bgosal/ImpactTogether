@@ -32,9 +32,11 @@ export async function PUT(req) {
   try {
     await connectToDB();
 
-    const { id, email, achievements, ...updatedFields } = await req.json();
-
+    const { id, email, achievements, profilePicture, ...updatedFields } = await req.json();
     
+   
+    
+
     if (email) {
       const existingUser = await User.findOne({ email });
       if (existingUser && existingUser._id.toString() !== id) {
@@ -42,16 +44,16 @@ export async function PUT(req) {
       }
     }
 
+    const updateData = {
+      ...updatedFields,
+      email,
+      profilePicture: profilePicture || "/images/stock_pp.png",
+      ...(achievements ? { achievements } : {}),
+    };
 
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      {
-        ...updatedFields,
-        email,
-        ...(achievements ? { achievements } : {}),
-      },
-      { new: true }
-    );
+   
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
+    
 
     if (!updatedUser) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });

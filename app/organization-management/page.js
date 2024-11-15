@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { FiCamera, FiEdit, FiCheck, FiX, FiMail, FiPhone, FiMapPin, FiGlobe, FiUser } from "react-icons/fi";
+import { FiTrash2, FiCamera, FiEdit, FiCheck, FiX, FiMail, FiPhone, FiMapPin, FiGlobe, FiUser } from "react-icons/fi";
 import { MdEvent, MdHistory, MdStar, MdBusiness } from "react-icons/md";
 import Loader from "@components/Loader";
+
 
 export default function OrganizerProfile() {
     const { data: session } = useSession();
@@ -17,7 +18,11 @@ export default function OrganizerProfile() {
     const [tempProfile, setTempProfile] = useState({});
     const [isEditingAchievements, setIsEditingAchievements] = useState(false);
     const [tempAchievements, setTempAchievements] = useState("");
+    const [file, setFile] = useState([]);
+    const DEFAULT_PICTURE = "/images/org.png";
 
+
+    const fileInputRef = useRef(null); 
     const router = useRouter();
 
     useEffect(() => {
@@ -44,7 +49,8 @@ export default function OrganizerProfile() {
                     phone: data.phone,
                     location: data.location,
                     bio: data.bio,
-                    website: data.website || "" 
+                    website: data.website || "",
+                    profilePicture: data.profilePicture || DEFAULT_PICTURE
                 });
             } catch (error) {
                 console.error("Error fetching organizer data:", error);
@@ -52,10 +58,29 @@ export default function OrganizerProfile() {
             } finally {
                 setLoading(false);
             }
+
         };
 
         fetchOrganizerProfile();
     }, [session, router]);
+
+    const handleFileButtonClick = () => {
+        fileInputRef.current.click();  
+    };
+
+    const handleProfilePictureChange = (event) => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+            const base64String = reader.result;
+            setTempProfile((prev) => ({ ...prev, profilePicture: base64String }));
+        };
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    };
 
     const handleProfileEditClick = () => {
         setIsEditingProfile(true);
@@ -67,7 +92,7 @@ export default function OrganizerProfile() {
         const urlPattern = /^(https?:\/\/)?(www\.)?([\w-]+\.)+(com|ca|net|org|edu|gov|mil|io|info|biz)(\/\S*)?$/i;
         return urlPattern.test(url);
     };
-
+    
     const handleProfileSaveClick = async () => {
         if (tempProfile.organizationName === "") {
             alert("Organization name cannot be left blank.");
@@ -85,7 +110,6 @@ export default function OrganizerProfile() {
                 return;
             }
     
-            
             if (!tempProfile.website.startsWith("http://") && !tempProfile.website.startsWith("https://")) {
                 tempProfile.website = `https://${tempProfile.website}`;
             }
@@ -120,7 +144,6 @@ export default function OrganizerProfile() {
         }
     };
     
-    
     const handleProfileCancelClick = () => {
         setTempProfile({
             organizationName: organizer.organizationName,
@@ -128,7 +151,8 @@ export default function OrganizerProfile() {
             phone: organizer.phone,
             location: organizer.location,
             bio: organizer.bio,
-            website: organizer.website || ""
+            website: organizer.website || "",
+            profilePicture: organizer.profilePicture || DEFAULT_PICTURE
         });
         setIsEditingProfile(false);
     };
@@ -177,12 +201,30 @@ export default function OrganizerProfile() {
         }
     };
     
-    
-
     const handleCancelAchievementsClick = () => {
         setIsEditingAchievements(false);
         setTempAchievements(organizer.achievements?.join("\n"));
     };
+
+    const handleDeleteProfilePicture = async () => {
+        try {
+            const response = await fetch(`/api/profile`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: session.user.id, profilePicture: DEFAULT_PICTURE }),
+            });
+
+            if (!response.ok) throw new Error("Failed to delete profile picture");
+
+            setOrganizer((prev) => ({ ...prev, profilePicture: DEFAULT_PICTURE }));
+            setTempProfile((prev) => ({ ...prev, profilePicture: DEFAULT_PICTURE }));
+        } catch (error) {
+            console.error("Error deleting profile picture:", error);
+            alert("Failed to delete profile picture. Please try again.");
+        }
+    };
+
+    
 
     if (loading) return <Loader />
     if (error) return <p>{error}</p>;
@@ -192,11 +234,35 @@ export default function OrganizerProfile() {
         <main className="profile-page">
             <section className="profile-card">
                 <div className="profile-picture">
-                    <img src={organizer.profilePicture || "/images/sample_logo.webp"} alt="Organizer Profile" />
-                    <button className="change-picture-button">
-                        <FiCamera style={{ marginRight: "8px" }} /> Change Profile Picture
-                    </button>
+                    <img src={tempProfile.profilePicture || DEFAULT_PICTURE} alt="Organizer Profile" />
+                    
+                   
+                    {isEditingProfile && (
+                        <>
+                            <button className="change-picture-button" onClick={handleFileButtonClick}>
+                                <FiCamera style={{ marginRight: "8px" }} /> Change Profile Picture
+                            </button>
+                            
+                            <button className="delete-picture-button" onClick={handleDeleteProfilePicture}>
+                                <FiTrash2 /> Delete Profile Picture
+                            </button>
+                        </>
+                    )}
+                    
+                   
+                    <input
+                        type="file"
+                        className="filepond"
+                        name="filepond"
+                        accept="image/png, image/jpeg, image/gif"
+                        ref={fileInputRef}
+                        onChange={handleProfilePictureChange}
+                        style={{ display: 'none' }}
+                    />
+
+                    
                 </div>
+
 
                 <div className="profile-info">
                     <h1 className="profile-name">

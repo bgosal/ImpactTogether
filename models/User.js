@@ -78,7 +78,12 @@ const UserSchema = new mongoose.Schema({
   goals: {
     type: [String], 
     default: [],
+  },
+  profilePicture: {
+    type: String,  
+    default: null,
   }
+
 });
 
 const User = mongoose.models.User || mongoose.model("User", UserSchema);

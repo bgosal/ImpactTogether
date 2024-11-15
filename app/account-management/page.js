@@ -7,28 +7,29 @@ import { MdEvent, MdSchool, MdLanguage, MdStar, MdCheckCircle, MdHistory, MdFavo
 import Loader from "@components/Loader";
 
 export default function Profile() {
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isEditingProfile, setIsEditingProfile] = useState(false);
     const [tempUser, setTempUser] = useState({});
+    const [profilePicture, setProfilePicture] = useState(null); 
+    const [previewProfilePicture, setPreviewProfilePicture] = useState(null); 
     const [editStates, setEditStates] = useState({});
 
     useEffect(() => {
-        const fetchUserProfile = async () => {
-            if (session === undefined) return;
-            if (!session?.user?.id) {
-                setError("User not authenticated");
-                setLoading(false);
-                return;
-            }
+        if (status === "loading") return; 
+        if (!session?.user?.id) {
+            setError("User not authenticated");
+            setLoading(false);
+            return;
+        }
 
+        const fetchUserProfile = async () => {
             try {
                 const response = await fetch(`/api/profile?id=${session.user.id}`);
-                if (!response.ok) {
-                    throw new Error("Failed to fetch user data");
-                }
+                if (!response.ok) throw new Error("Failed to fetch user data");
+
                 const data = await response.json();
                 setUser(data);
                 setTempUser({
@@ -48,6 +49,7 @@ export default function Profile() {
                     upcomingEvents: data.upcomingEvents,
                     recentEvent: data.recentEvent,
                 });
+                setPreviewProfilePicture(data.profilePicture || "/images/stock_pp.png");
             } catch (error) {
                 console.error("Error fetching profile data:", error);
                 setError("Failed to load profile data.");
@@ -57,7 +59,20 @@ export default function Profile() {
         };
 
         fetchUserProfile();
-    }, [session]);
+    }, [session, status]);
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const base64Data = reader.result;
+            setProfilePicture(base64Data); 
+            setPreviewProfilePicture(base64Data); 
+        };
+        reader.readAsDataURL(file);
+    };
 
     const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -66,7 +81,7 @@ export default function Profile() {
             alert("Both First and Last Name cannot be left blank.");
             return;
         }
-    
+
         if (!isValidEmail(tempUser.email)) {
             alert("Please enter a valid email address.");
             return;
@@ -78,58 +93,47 @@ export default function Profile() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ id: session.user.id, ...tempUser }),
+                body: JSON.stringify({ id: session.user.id, ...tempUser, profilePicture: profilePicture || user.profilePicture }),
             });
 
-            if (!response.ok) {
-                throw new Error("Failed to update profile");
-            }
+            if (!response.ok) throw new Error("Failed to update profile");
 
             const updatedData = await response.json();
             setUser(updatedData);
             setIsEditingProfile(false);
+            setPreviewProfilePicture(updatedData.profilePicture); 
         } catch (error) {
             console.error("Error updating profile:", error);
             alert("There was an error saving your profile. Please try again.");
         }
     };
 
-    const handleProfileEditClick = () => {
-        setIsEditingProfile(true);
-    };
+    const handleProfileEditClick = () => setIsEditingProfile(true);
 
     const handleProfileCancelClick = () => {
         setTempUser({ ...user });
+        setPreviewProfilePicture(user.profilePicture || "/images/stock_pp.png"); 
         setIsEditingProfile(false);
     };
 
-    const handleInputChange = (field, value) => {
-        setTempUser((prev) => ({ ...prev, [field]: value }));
-    };
+    const handleInputChange = (field, value) => setTempUser((prev) => ({ ...prev, [field]: value }));
 
-    const handleTileEditClick = (field) => {
-        setEditStates((prev) => ({ ...prev, [field]: true }));
-    };
+    const handleTileEditClick = (field) => setEditStates((prev) => ({ ...prev, [field]: true }));
 
     const handleTileSaveClick = async (field) => {
-        const updatedValue = tempUser[field]?.filter(item => item.trim() !== "") || []; 
-    
+        const updatedValue = tempUser[field]?.filter((item) => item.trim() !== "") || [];
+
         try {
             const response = await fetch(`/api/profile`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    id: session.user.id,
-                    [field]: updatedValue.length ? updatedValue : null, 
-                }),
+                body: JSON.stringify({ id: session.user.id, [field]: updatedValue.length ? updatedValue : null }),
             });
-    
-            if (!response.ok) {
-                throw new Error("Failed to update profile");
-            }
-    
+
+            if (!response.ok) throw new Error("Failed to update profile");
+
             const updatedData = await response.json();
             setUser((prev) => ({ ...prev, [field]: updatedData[field] }));
             setEditStates((prev) => ({ ...prev, [field]: false }));
@@ -138,11 +142,33 @@ export default function Profile() {
             alert("There was an error saving your profile. Please try again.");
         }
     };
-    
 
     const handleTileCancelClick = (field) => {
         setTempUser((prev) => ({ ...prev, [field]: user[field] }));
         setEditStates((prev) => ({ ...prev, [field]: false }));
+    };
+
+    const handleDeleteProfilePicture = async () => {
+        try {
+           
+            const response = await fetch(`/api/profile`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ id: session.user.id, profilePicture: null }),
+            });
+    
+            if (!response.ok) throw new Error("Failed to delete profile picture");
+    
+            
+            setProfilePicture(null);
+            setPreviewProfilePicture("/images/stock_pp.png"); 
+            setUser((prev) => ({ ...prev, profilePicture: null }));
+        } catch (error) {
+            console.error("Error deleting profile picture:", error);
+            alert("There was an error deleting your profile picture. Please try again.");
+        }
     };
 
     if (loading) return <Loader />;
@@ -154,14 +180,28 @@ export default function Profile() {
     return (
         <main className="profile-page">
             <section className="profile-card">
-                <div className="profile-picture">
-                    <img src={user.profilePicture || "/images/stock_pp.png"} alt="Profile" />
-                    <button className="change-picture-button">
-                        <FiCamera style={{ marginRight: "8px" }} /> Change Profile Picture
-                    </button>
-                </div>
+            <div className="profile-picture">
+                <img src={previewProfilePicture} alt="Profile" />
+                {isEditingProfile && (
+                    <>
+                        <label className="change-picture-button">
+                            <FiCamera style={{ marginRight: "8px" }} />
+                            Change Profile Picture
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleFileChange}
+                                style={{ display: "none" }}
+                            />
+                        </label>
+                        <button onClick={handleDeleteProfilePicture} className="delete-picture-button">
+                            Delete Profile Picture
+                        </button>
+                    </>
+                )}
+            </div>
 
-                
+
                 {!isEditingProfile && (
                     <button onClick={handleProfileEditClick} className="edit-button">
                         <FiEdit />
@@ -169,29 +209,29 @@ export default function Profile() {
                 )}
 
                 <div className="profile-info">
-                <h1 className="profile-name">
-                    <FiUserCheck className="icon name-icon" /> 
-                    {isEditingProfile ? (
-                        <div className="name-fields">
-                            <input
-                                type="text"
-                                value={tempUser.firstname || ""}
-                                onChange={(e) => handleInputChange("firstname", e.target.value)}
-                                placeholder="First Name"
-                                className="name-input"
-                            />
-                            <input
-                                type="text"
-                                value={tempUser.lastname || ""}
-                                onChange={(e) => handleInputChange("lastname", e.target.value)}
-                                placeholder="Last Name"
-                                className="name-input"
-                            />
-                        </div>
-                    ) : (
-                        fullName || <span className="placeholder-text">Add Name</span>
-                    )}
-                </h1>
+                    <h1 className="profile-name">
+                        <FiUserCheck className="icon name-icon" />
+                        {isEditingProfile ? (
+                            <div className="name-fields">
+                                <input
+                                    type="text"
+                                    value={tempUser.firstname || ""}
+                                    onChange={(e) => handleInputChange("firstname", e.target.value)}
+                                    placeholder="First Name"
+                                    className="name-input"
+                                />
+                                <input
+                                    type="text"
+                                    value={tempUser.lastname || ""}
+                                    onChange={(e) => handleInputChange("lastname", e.target.value)}
+                                    placeholder="Last Name"
+                                    className="name-input"
+                                />
+                            </div>
+                        ) : (
+                            fullName || <span className="placeholder-text">Add Name</span>
+                        )}
+                    </h1>
 
                     <div className="contact-info">
                         <p>
@@ -256,14 +296,17 @@ export default function Profile() {
 
                     {isEditingProfile && (
                         <div className="profile-edit-controls">
-                            <button onClick={handleProfileSaveClick} className="save-button"><FiCheck /></button>
-                            <button onClick={handleProfileCancelClick} className="cancel-button"><FiX /></button>
+                            <button onClick={handleProfileSaveClick} className="save-button">
+                                <FiCheck />
+                            </button>
+                            <button onClick={handleProfileCancelClick} className="cancel-button">
+                                <FiX />
+                            </button>
                         </div>
                     )}
                 </div>
             </section>
 
-            
             <div className="bottom-row">
                 {[
                     { title: "Interests", icon: MdFavorite, field: "interests" },
@@ -275,7 +318,9 @@ export default function Profile() {
                     { title: "Goals", icon: MdFlag, field: "goals", isList: true },
                 ].map(({ title, icon: Icon, field, isList }, index) => (
                     <section className="info-card" key={index}>
-                        <h2><Icon className="tile-icon" /> {title}</h2>
+                        <h2>
+                            <Icon className="tile-icon" /> {title}
+                        </h2>
                         {editStates[field] ? (
                             <div>
                                 <textarea
@@ -285,8 +330,12 @@ export default function Profile() {
                                     rows={5}
                                     placeholder={`Add ${title}, one per line`}
                                 />
-                                <button onClick={() => handleTileSaveClick(field)} className="save-button"><FiCheck /></button>
-                                <button onClick={() => handleTileCancelClick(field)} className="cancel-button"><FiX /></button>
+                                <button onClick={() => handleTileSaveClick(field)} className="save-button">
+                                    <FiCheck />
+                                </button>
+                                <button onClick={() => handleTileCancelClick(field)} className="cancel-button">
+                                    <FiX />
+                                </button>
                             </div>
                         ) : (
                             <div>
@@ -295,26 +344,29 @@ export default function Profile() {
                                         ? user[field].map((item, idx) => <li key={idx}>{item}</li>)
                                         : <span className="placeholder-text">Add {title}</span>}
                                 </ul>
-                                <button onClick={() => handleTileEditClick(field)} className="edit-button"><FiEdit /></button>
+                                <button onClick={() => handleTileEditClick(field)} className="edit-button">
+                                    <FiEdit />
+                                </button>
                             </div>
                         )}
                     </section>
                 ))}
 
-                
                 <section className="info-card">
-                    <h2><MdEvent className="tile-icon" /> Upcoming Events</h2>
+                    <h2>
+                        <MdEvent className="tile-icon" /> Upcoming Events
+                    </h2>
                     <ul>
                         {user.upcomingEvents?.length
-                            ? user.upcomingEvents.map((event, index) => (
-                                <li key={index}>{event}</li>
-                            ))
+                            ? user.upcomingEvents.map((event, index) => <li key={index}>{event}</li>)
                             : <span className="placeholder-text">No Upcoming Events</span>}
                     </ul>
                 </section>
 
                 <section className="info-card">
-                    <h2><MdHistory className="tile-icon" /> Most Recent Event</h2>
+                    <h2>
+                        <MdHistory className="tile-icon" /> Most Recent Event
+                    </h2>
                     <p>{user.recentEvent || <span className="placeholder-text">No Recent Events</span>}</p>
                 </section>
             </div>

@@ -188,10 +188,11 @@ export default function OrganizerEventsList() {
                     <FiMapPin /> {event.location}
                   </div>
                   <div className="event-buttons">
-                    <button>Edit Event</button>
-                    <button>View Participants</button>
-                    <button>Cancel Event</button>
+                    <button className="edit-event-button">Edit Event</button>
+                    <button className="view-participants-button">View Participants</button>
+                    <button className="cancel-event-button">Cancel Event</button>
                   </div>
+
                 </li>
               ))}
             </ul>
@@ -234,11 +235,9 @@ export default function OrganizerEventsList() {
                     <FiMapPin /> {event.location}
                   </div>
                   <div className="event-buttons">
-                    <button>Edit Event</button>
                     <Link href={`/participants/${event._id}`}>
-                      <button>View Participants</button>
+                      <button className="view-participants-button">View Participants</button>
                     </Link>
-                    <button>Cancel Event</button>
                   </div>
                 </li>
               ))}

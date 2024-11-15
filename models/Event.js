@@ -9,14 +9,14 @@ const EventSchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: [
-      "health", 
-      "food", 
-      "community", 
-      "education", 
-      "environment", 
-      "animal_care", 
-      "youth", 
-      "arts"
+      "Animal_Care",
+      "Arts",
+      "Community",
+      "Education",
+      "Environment",
+      "Food",
+      "Health",
+      "Youth"
     ],
   },
   date: {
@@ -35,14 +35,14 @@ const EventSchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: [
-      "vancouver", 
-      "burnaby", 
-      "richmond", 
-      "surrey", 
-      "langley", 
-      "abbotsford", 
-      "coquitlam", 
-      "delta"
+      "Abbotsford",
+      "Burnaby",
+      "Coquitlam",
+      "Delta",
+      "Langley",
+      "Richmond",
+      "Surrey",
+      "Vancouver"
     ],
   },
   description: {

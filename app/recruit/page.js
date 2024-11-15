@@ -132,14 +132,14 @@ export default function Recruit() {
                 onChange={handleChange}
               >
                 <option value="">Select Category</option>
-                <option value="health">Health</option>
-                <option value="food">Food</option>
-                <option value="community">Community</option>
-                <option value="education">Education</option>
-                <option value="environment">Environment</option>
-                <option value="animal_care">Animal Care</option>
-                <option value="youth">Youth</option>
-                <option value="arts">Arts & Culture</option>
+                <option value="Animal_Care">Animal Care</option>
+                <option value="Arts">Arts & Culture</option>
+                <option value="Community">Community</option>
+                <option value="Education">Education</option>
+                <option value="Environment">Environment</option>
+                <option value="Food">Food</option>
+                <option value="Health">Health</option>
+                <option value="Youth">Youth</option>
               </select>
             </div>
             <div className="event-input-group">
@@ -190,15 +190,15 @@ export default function Recruit() {
                 value={formData.location}
                 onChange={handleChange}
               >
-                <option value="">Select City</option>
-                <option value="vancouver">Vancouver</option>
-                <option value="burnaby">Burnaby</option>
-                <option value="richmond">Richmond</option>
-                <option value="surrey">Surrey</option>
-                <option value="langley">Langley</option>
-                <option value="abbotsford">Abbotsford</option>
-                <option value="coquitlam">Coquitlam</option>
-                <option value="delta">Delta</option>
+                <option value="">Select Location</option>
+                <option value="Abbotsford">Abbotsford</option>
+                <option value="Burnaby">Burnaby</option>
+                <option value="Coquitlam">Coquitlam</option>
+                <option value="Delta">Delta</option>
+                <option value="Langley">Langley</option>
+                <option value="Richmond">Richmond</option>
+                <option value="Surrey">Surrey</option>
+                <option value="Vancouver">Vancouver</option>
               </select>
             </div>
           </section>
