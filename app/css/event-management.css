@@ -209,7 +209,7 @@ button {
 }
   
   
-.event-buttons button {
+.event-buttons button, .cancel-app-event-button {
   padding: 8px 12px;
   font-size: 14px;
   
@@ -228,7 +228,7 @@ button {
   background-color: #5783c4; 
 }
   
-.cancel-event-button { 
+.cancel-event-button, .cancel-app-event-button{ 
   background-color: red; 
 }
   
@@ -241,7 +241,7 @@ button {
   background-color: #466a9e; 
 }
 
-.cancel-event-button:hover {
+.cancel-event-button:hover, .cancel-app-event-button:hover{
   background-color: #b20000; 
 }
 
@@ -298,4 +298,16 @@ button {
 
 .remove-participant:hover {
   background-color: #ad3224;
+}
+
+.cancel-app-event-button {
+  display: block; 
+  margin: 10px auto; 
+  text-align: center; 
+  padding: 10px 20px;
+  background-color: #ff4d4f; 
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }

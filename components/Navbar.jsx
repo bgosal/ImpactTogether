@@ -17,8 +17,8 @@ export const Navbar = () => {
             <>
               
               {session.user.role === "volunteer" && (
-                <Link className="nav-button-link" href="/saved">
-                  <button className="nav-button">Saved Opportunities</button>
+                <Link className="nav-button-link" href="/my-applications">
+                  <button className="nav-button">My Applications</button>
                 </Link>
               )}
 

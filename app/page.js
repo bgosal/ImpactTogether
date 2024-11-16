@@ -1,45 +1,40 @@
-import { Item } from "@components/Item";
-
-// TO DO: Get this data directly from a database
-const items = [
-  {
-    id: 1,
-    title: "Test",
-    description: "This is a short description of item 1. It is designed to give a brief overview.",
-    img: "/images/sample_logo.webp"
-  },
-  {
-    id: 2,
-    title: "Test",
-    description: "This is a short description of item 2. It is designed to give a brief overview.",
-    img: "https://dummyimage.com/100"
-  },
-  {
-    id: 3,
-    title: "Test",
-    description: "This is a short description of item 3. It is designed to give a brief overview.",
-    img: "https://dummyimage.com/100"
-  },
-  {
-    id: 4,
-    title: "Test",
-    description: "This is a short description of item 4. It is designed to give a brief overview.",
-    img: "https://dummyimage.com/100"
-  },
-  {
-    id: 5,
-    title: "Test",
-    description: "This is a short description of item 5. It is designed to give a brief overview.",
-    img: "https://dummyimage.com/100"
-  },
-];
+"use client";
+import { useState, useEffect } from "react";
+import Link from "next/link";
 
 export default function Home() {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch("/api/event");
+        if (!response.ok) {
+          throw new Error("Failed to fetch events");
+        }
+        const data = await response.json();
+        setEvents(data);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load events.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
+
   return (
     <main>
       <section className="item-container">
         <div className="filter-section">
-          <input type="text" placeholder="Search..." className="filter-input"/>
+          <input type="text" placeholder="Search..." className="filter-input" />
           <select className="filter-dropdown">
             <option value="">Select City</option>
             <option value="langley">Langley</option>
@@ -57,16 +52,23 @@ export default function Home() {
         </div>
 
         <div className="item-list">
-          {items.map(item => (
-            <Item
-              key={item.id}
-              title={item.title}
-              description={item.description}
-              img={item.img}
-            />
+          {events.map((event) => (
+            <div key={event._id} className="item">
+              <img
+                src="https://dummyimage.com/100" 
+                alt={event.eventName}
+                className="item-img"
+              />
+              <h3 className="item-title">
+                <Link href={`/events/${event._id}`}>{event.eventName}</Link> 
+              </h3>
+              <p className="item-description">
+                {`Event in ${event.location} on ${new Date(event.date).toLocaleDateString()}`}
+              </p>
+            </div>
           ))}
         </div>
       </section>
     </main>
-  )
+  );
 }

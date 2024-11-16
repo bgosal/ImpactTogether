@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { useSession } from "next-auth/react"; 
 import Image from "next/image";
 import Link from "next/link";
 import { FiCheck, FiMail, FiCalendar, FiClock, FiMapPin, FiInfo, FiList, FiFileText, FiEdit, FiX } from "react-icons/fi";
@@ -10,6 +11,7 @@ import { MdEvent, MdBusiness } from "react-icons/md";
 import Loader from "@components/Loader";
 
 export default function EventDetails() {
+  const { data: session } = useSession(); 
   const router = useRouter();
   const { id } = useParams();  
   const [event, setEvent] = useState(null);
@@ -19,6 +21,13 @@ export default function EventDetails() {
   const [profilePicture, setProfilePicture] = useState(null); 
   const [isEditing, setIsEditing] = useState(false);
   const [tempEvent, setTempEvent] = useState({});
+  const [isOrganizer, setIsOrganizer] = useState(false); 
+  const [hasApplied, setHasApplied] = useState(false); 
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false); 
+  const [applicationSubmitted, setApplicationSubmitted] = useState(false);
+  const [showCancelConfirmationModal, setShowCancelConfirmationModal] = useState(false);
+  const [applicationCancelled, setApplicationCancelled] = useState(false); 
+
 
   const categoryIcons = {
     Animal_Care: <FiHeart />,
@@ -32,18 +41,31 @@ export default function EventDetails() {
   };
   
 
+
   useEffect(() => {
     if (!id) return;
-
+  
     const fetchEvent = async () => {
       try {
         const response = await fetch(`/api/event?id=${id}`);
         if (!response.ok) throw new Error("Failed to fetch event details");
-
+  
         const data = await response.json();
         setEvent(data);
         setTempEvent(data);
-
+  
+        console.log("Participants in Event:", data.participants);
+  
+   
+        if (session?.user?.id && data.participants.some(p => p._id === session.user.id)) {
+          setHasApplied(true);
+          console.log("User has already applied");
+        }
+  
+        if (session?.user?.id && data.organizer === session.user.id) {
+          setIsOrganizer(true);
+        }
+  
         if (data.organizer) {
           const orgResponse = await fetch(`/api/profile?id=${data.organizer}`);
           if (orgResponse.ok) {
@@ -59,9 +81,71 @@ export default function EventDetails() {
         setLoading(false);
       }
     };
-
+  
     fetchEvent();
-  }, [id]);
+  }, [id, session]);
+  
+const isVolunteer = session?.user?.role !== "organizer";
+  const handleApply = async () => {
+    if (!session) {
+      router.push("/login");
+      return;
+    }
+  
+    try {
+      const response = await fetch(`/api/event`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          eventId: id,
+          userId: session?.user?.id,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to apply to the event");
+      }
+  
+      setApplicationSubmitted(true); 
+  
+  
+      setTimeout(() => {
+        window.location.reload(); 
+      }, 5000); 
+    } catch (err) {
+      console.error("Error applying to event:", err);
+      alert("An error occurred while submitting your application. Please try again.");
+    }
+  };
+  
+  
+  const handleDeleteApplication = async () => {
+    try {
+      const response = await fetch(`/api/event?eventId=${id}&userId=${session?.user?.id}`, {
+        method: "DELETE",
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to cancel the application");
+      }
+  
+      const data = await response.json();
+      console.log("Application canceled:", data);
+      setShowCancelConfirmationModal(false);
+      setApplicationCancelled(true); 
+  
+
+      setTimeout(() => {
+        window.location.reload(); 
+      }, 5000); 
+    } catch (err) {
+      console.error("Error canceling application:", err);
+      alert("An error occurred while canceling your application. Please try again.");
+    }
+  };
+  
+  
+
 
   const handleEditClick = () => setIsEditing(true);
 
@@ -197,22 +281,48 @@ export default function EventDetails() {
             )}
             
             <div className="button-group">
-             
-              {!isPastEvent && (
-                <button className="apply-now-button"><FiCheck /> Apply Now</button>
+              
+            {!isPastEvent && !isOrganizer && isVolunteer && !hasApplied && (
+                <button
+                  className="apply-now-button"
+                  onClick={() => {
+                    if (!session) {
+                      router.push("/login");
+                    } else {
+                      setShowConfirmationModal(true);
+                    }
+                  }}
+                >
+                  <FiCheck /> Apply Now
+                </button>
               )}
+
+              
+              {!isPastEvent && hasApplied && (
+                <button
+                  className="cancel-application-button"
+                  onClick={() => setShowCancelConfirmationModal(true)}
+                >
+                  <FiX /> Cancel Application
+                </button>
+                          
+              )}
+
               <button className="contact-button"><FiMail /> Contact</button>
-              {!isPastEvent && (
+
+              
+              {!isPastEvent && isOrganizer && (
                 isEditing ? (
                   <>
-                    <button onClick={handleSaveClick} className="save-button"><FiCheck /> </button>
-                    <button onClick={handleCancelClick} className="cancel-button"><FiX /> </button>
+                    <button onClick={handleSaveClick} className="save-button"><FiCheck /> Save</button>
+                    <button onClick={handleCancelClick} className="cancel-button"><FiX /> Cancel</button>
                   </>
                 ) : (
                   <button onClick={handleEditClick} className="event-edit-button"><FiEdit /> Edit</button>
                 )
               )}
             </div>
+
           </div>
         </section>
         
@@ -323,6 +433,85 @@ export default function EventDetails() {
 
         </section>
       </div>
+      {showConfirmationModal && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <button
+                className="close-modal"
+                onClick={() => setShowConfirmationModal(false)}
+              >
+                &times;
+              </button>
+              <h2 className="modal-header">Confirm Application</h2>
+              <p className="modal-content">Are you sure you want to apply for this event?</p>
+              <div className="modal-buttons">
+                <button
+                  className="confirm-button"
+                  onClick={() => {
+                    handleApply();
+                    setShowConfirmationModal(false);
+                  }}
+                >
+                  Yes
+                </button>
+                <button
+                  className="cancel-button-app"
+                  onClick={() => setShowConfirmationModal(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        
+      {showCancelConfirmationModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <button
+              className="close-modal"
+              onClick={() => setShowCancelConfirmationModal(false)}
+            >
+              &times;
+            </button>
+            <h2 className="modal-header">Cancel Application</h2>
+            <p className="modal-content">Are you sure you want to cancel your application?</p>
+            <div className="modal-buttons">
+              <button
+                className="confirm-button"
+                onClick={handleDeleteApplication}
+              >
+                Yes
+              </button>
+              <button
+                className="cancel-button-app"
+                onClick={() => setShowCancelConfirmationModal(false)}
+              >
+                No
+              </button>
+            </div>
+          </div>
+          </div>
+      )}
+
+
+        {applicationSubmitted && (
+          <div className="success-message">
+            <p>Your application has been submitted successfully!</p>
+            <button onClick={() => window.location.reload()}>OK</button>
+          </div>
+        )}
+
+        {applicationCancelled && (
+          <div className="success-message">
+            <p>Your application has been successfully cancelled!</p>
+            <button onClick={() => window.location.reload()}>OK</button>
+          </div>
+        )}
+
+
     </main>
   );
 }
+    

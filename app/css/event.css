@@ -68,7 +68,7 @@
 
 
 
-.contact-button, .apply-now-button, .event-edit-button {
+.contact-button, .apply-now-button, .event-edit-button, .cancel-application-button{
   display: flex;
   align-items: center; 
   justify-content: center; 
@@ -429,3 +429,151 @@
 
 
 
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's above other elements */
+}
+
+/* Modal Container */
+.modal {
+  background: #fff;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  position: relative;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px; 
+  color: #333;
+  cursor: pointer;
+}
+
+
+.modal-header {
+  font-size: 20px; 
+  margin-bottom: 15px;
+  color: #444;
+  font-weight: bold;
+}
+
+.modal-content {
+  font-size: 16px; 
+  color: #666;
+  margin-bottom: 20px;
+}
+
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 10px;
+}
+
+.confirm-button,
+.cancel-button-app {
+  background: #FFA500;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px; 
+  cursor: pointer;
+  transition: background 0.3s ease;
+  width: 120px; 
+  text-align: center;
+}
+
+
+
+.cancel-button-app {
+  background: red;
+}
+
+.confirm-button:hover {
+  background-color: #FF8C00; 
+  color: #fff; 
+
+}
+
+.cancel-button-app:hover {
+  background: #e53935;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cancel-application-button {
+  background-color: #ff6b6b; 
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.2s ease;
+}
+
+.cancel-application-button:hover {
+  background-color: #ff4c4c;
+}
+
+
+
+.success-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  color:#666666;
+  background-color: white; 
+  border: 3px solid #4A90E2; 
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  z-index: 1000;
+}
+
+.success-message button {
+  margin-top: 15px;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: none;
+  background-color: #FFA500;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.success-message button:hover {
+  background-color: #FF8C00;
+}

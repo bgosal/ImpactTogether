@@ -141,40 +141,39 @@ export default function OrganizerEventsList() {
     <main>
       {/* Pop-up */}
       {isParticipantsOpen && (
-        <div className="popup-overlay">
-          <div className="popup">
-          <button className="close-popup" onClick={closeParticipants}>
-              X
-            </button>
+  <div className="popup-overlay">
+    <div className="popup">
+      <button className="close-popup" onClick={closeParticipants}>
+        X
+      </button>
 
-            <h2 style={{background: "none"}}>Participants</h2>
+      <h2 style={{ background: "none" }}>Participants</h2>
 
-            <div className="participants-list">
-              {event.participants.map((participant, i) => (
-                <div key={`${event._id}-${participant._id}`} className="participant-item">
-                  <Image 
-                    src={participant.profilePicture || "https://dummyimage.com/100"} 
-                    alt={`${participant.firstname} ${participant.lastname}`}
-                    width={100} 
-                    height={100}
-                    className="participant-image"
-                  />
-                  <div className="participant-info">
-                    <h3 className="participant-name">{`${participant.firstname} ${participant.lastname}`}</h3>
-                  </div>
-                  <button
-                    className="remove-participant"
-                    onClick={() => handleDeleteParticipant(event._id, participant._id)}
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
+      <div className="participants-list">
+        {event.participants && event.participants.length > 0 ? (
+          event.participants.map((participant) => (
+            <div key={participant._id} className="participant-item">
+              <Image 
+                src={participant.profilePicture || "https://dummyimage.com/100"} 
+                alt={`${participant.firstname} ${participant.lastname}`}
+                width={100} 
+                height={100}
+                className="participant-image"
+              />
+              <div className="participant-info">
+                <h3 className="participant-name">{`${participant.firstname} ${participant.lastname}`}</h3>
+              </div>
             </div>
-
+          ))
+              ) : (
+                <p>No participants yet.</p>
+              )}
+            </div>
           </div>
         </div>
       )}
+
+            
 
       <div className="title-container">
         <header className="manage-events-heading">Manage Events</header>
