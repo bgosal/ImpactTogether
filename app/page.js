@@ -1,21 +1,38 @@
 "use client";
+
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import Item from "@components/Item";
+import Loader from "@components/Loader";
+import Fuse from "fuse.js";
 
 export default function Home() {
   const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
+
+  const [search, setSearch] = useState("");
+  const [city, setCity] = useState("");
+  const [category, setCategory] = useState("");
+  
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Fetches events from database and removes any that have expired (Only runs on intial render)
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const response = await fetch("/api/event");
-        if (!response.ok) {
-          throw new Error("Failed to fetch events");
-        }
+        
+        if (!response.ok) { throw new Error("Failed to fetch events"); }
+        
         const data = await response.json();
-        setEvents(data);
+
+        // Filters out events with expired dates
+        const upcomingEvents = data.filter(
+          (event) => new Date(event.date) >= new Date()
+        );
+
+        setEvents(upcomingEvents);
+        setFilteredEvents(upcomingEvents);
       } catch (err) {
         console.error(err);
         setError("Failed to load events.");
@@ -27,48 +44,89 @@ export default function Home() {
     fetchEvents();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  useEffect(() => {
+    const fuse = new Fuse(events, {
+      keys: ["eventName", "location"], // Fields to search
+      threshold: 0.1, // Match sensitivity (0.1 is strictest)
+    });
+
+    const filteredBySearch = search
+      ? fuse.search(search).map((result) => result.item)
+      : events;
+
+    const filtered = filteredBySearch.filter((event) => {
+      const matchesCity = city ? event.location === city : true;
+      const matchesCategory = category ? event.category === category : true;
+      return matchesCity && matchesCategory;
+    });
+
+    setFilteredEvents(filtered);
+  }, [search, city, category, events]);
+
+  if (loading) return <Loader />;
   if (error) return <p>{error}</p>;
 
   return (
     <main>
       <section className="item-container">
         <div className="filter-section">
-          <input type="text" placeholder="Search..." className="filter-input" />
-          <select className="filter-dropdown">
+          <input
+            type="text"
+            placeholder="Search..."
+            className="filter-input"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <select
+            className="filter-dropdown"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+          >
             <option value="">Select City</option>
-            <option value="langley">Langley</option>
-            <option value="vancouver">Vancouver</option>
-            <option value="abbotsford">Abbotsford</option>
-            <option value="surrey">Surrey</option>
+            <option value="Abbotsford">Abbotsford</option>
+            <option value="Burnaby">Burnaby</option>
+            <option value="Coquitlam">Coquitlam</option>
+            <option value="Delta">Delta</option>
+            <option value="Langley">Langley</option>
+            <option value="Richmond">Richmond</option>
+            <option value="Surrey">Surrey</option>
+            <option value="Vancouver">Vancouver</option>
           </select>
-          <select className="filter-dropdown">
+          <select
+            className="filter-dropdown"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
             <option value="">Select Category</option>
-            <option value="health">Health</option>
-            <option value="food">Food</option>
-            <option value="community">Community</option>
+            <option value="Animal_Care">Animal Care</option>
+            <option value="Arts">Arts</option>
+            <option value="Community">Community</option>
+            <option value="Education">Education</option>
+            <option value="Environment">Environment</option>
+            <option value="Food">Food</option>
+            <option value="Health">Health</option>
+            <option value="Youth">Youth</option>
           </select>
-          <button className="filter-button">Apply Filters</button>
         </div>
 
         <div className="item-list">
-          {events.map((event) => (
-            <div key={event._id} className="item">
-              <img
-                src="https://dummyimage.com/100" 
-                alt={event.eventName}
-                className="item-img"
+          {filteredEvents.length === 0 ? (
+            <p>No events match your criteria.</p>
+          ) : (
+            filteredEvents.map((event) => (
+              <Item
+                key={event._id}
+                title={event.eventName}
+                category={event.category}
+                location={event.location}
+                date={event.date}
+                img={"https://dummyimage.com/100"}
+                link={`/events/${event._id}`}
               />
-              <h3 className="item-title">
-                <Link href={`/events/${event._id}`}>{event.eventName}</Link> 
-              </h3>
-              <p className="item-description">
-                {`Event in ${event.location} on ${new Date(event.date).toLocaleDateString()}`}
-              </p>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </section>
     </main>
-  );
+  )
 }

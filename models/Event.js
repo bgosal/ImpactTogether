@@ -52,9 +52,7 @@ const EventSchema = new mongoose.Schema({
   requirements: {
     type: [String], 
     default: [],
-    
   },
-
   createdAt: {
     type: Date,
     default: Date.now,
