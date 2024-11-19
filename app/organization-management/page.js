@@ -375,13 +375,13 @@ export default function OrganizerProfile() {
                                     onChange={(e) => handleProfileChange("website", e.target.value)}
                                 />
                             ) : (
-                                <a href={organizer.website} target="_blank" rel="noopener noreferrer">
+                                <Link href={organizer.website} target="_blank" rel="noopener noreferrer">
                                     {organizer.website || (
                                         <span className="placeholder-text">
                                             {isOwner ? "Add Website" : "No Website"}
                                         </span>
                                     )}
-                                </a>
+                                </Link>
                             )}
                         </p>
                     </div>
@@ -410,7 +410,7 @@ export default function OrganizerProfile() {
 
                     <button
                         className="contact-button"
-                        onClick={() => window.location.href = `mailto:${data.email}`}
+                        onClick={() => window.location.href = `mailto:${organizer.email}`}
                         >
                             Contact
                     </button>  

@@ -286,8 +286,8 @@ const isVolunteer = session?.user?.role !== "organizer";
                     <div className="organization-info">
                       <MdBusiness className="organization-icon" />
                       {organizationName ? (
-                        <Link href={`/organization-management?id=${event.organizer}`}>
-                          <a className="organization-name clickable">{organizationName}</a> 
+                        <Link className="organization-name clickable" href={`/organization-management?id=${event.organizer}`}>
+                          {organizationName}
                         </Link>
                       ) : (
                         <p className="organization-name">Organizer</p>
