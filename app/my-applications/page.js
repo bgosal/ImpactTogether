@@ -234,7 +234,7 @@ export default function ApplicationManagementList() {
           className="events-section-heading upcoming-heading"
           onClick={() => setShowUpcoming(!showUpcoming)}
         >
-          Upcoming Applications {showUpcoming ? "▲" : "▼"}
+          Upcoming Events {showUpcoming ? "▲" : "▼"}
         </header>
         {showUpcoming && paginatedUpcomingApplications.length > 0 ? (
           <>
@@ -274,13 +274,13 @@ export default function ApplicationManagementList() {
             </div>
           </>
         ) : (
-          showUpcoming && <p>No upcoming applications.</p>
+          showUpcoming && <p>No upcoming events.</p>
         )}
       </section>
 
       <section className="events-section">
         <header className="events-section-heading past-heading" onClick={() => setShowPast(!showPast)}>
-          Past Applications {showPast ? "▲" : "▼"}
+          Past Events {showPast ? "▲" : "▼"}
         </header>
         {showPast && paginatedPastApplications.length > 0 ? (
           <>
@@ -313,7 +313,7 @@ export default function ApplicationManagementList() {
             </div>
           </>
         ) : (
-          showPast && <p>No past applications.</p>
+          showPast && <p>No past events.</p>
         )}
 
         {showCancelModal && (

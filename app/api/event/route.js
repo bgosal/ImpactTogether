@@ -45,6 +45,8 @@ export async function GET(req) {
 
 
 
+
+
 export async function POST(req) {
   try {
     await connectToDB();
@@ -58,6 +60,7 @@ export async function POST(req) {
       if (!event) {
         return NextResponse.json({ message: "Event not found" }, { status: 404 });
       }
+      
 
       if (event.participants.includes(userId)) {
         return NextResponse.json({ message: "User has already applied to this event" }, { status: 400 });
@@ -122,10 +125,10 @@ export async function DELETE(req) {
 
     const { searchParams } = new URL(req.url);
     const eventId = searchParams.get("eventId");
-    const userId = searchParams.get("userId");
+    const userId = searchParams.get("userId"); 
 
-    if (!eventId || !userId) {
-      return NextResponse.json({ message: "Event ID and User ID are required" }, { status: 400 });
+    if (!eventId) {
+      return NextResponse.json({ message: "Event ID is required" }, { status: 400 });
     }
 
     const event = await Event.findById(eventId);
@@ -133,20 +136,27 @@ export async function DELETE(req) {
       return NextResponse.json({ message: "Event not found" }, { status: 404 });
     }
 
-   
-    event.participants = event.participants.filter(participant => participant.toString() !== userId);
-    await event.save();
+    if (!userId) {
+      return NextResponse.json({ message: "User ID is required" }, { status: 400 });
+    }
 
-    return NextResponse.json({ message: "Application successfully canceled", event }, { status: 200 });
+    
+    if (event.organizer.toString() === userId) {
+      await Event.findByIdAndDelete(eventId);
+      return NextResponse.json({ message: "Event successfully deleted" }, { status: 200 });
+    }
+
+    
+    if (event.participants.some((participant) => participant.toString() === userId)) {
+      event.participants = event.participants.filter((participant) => participant.toString() !== userId);
+      await event.save();
+      return NextResponse.json({ message: "Application successfully canceled", event }, { status: 200 });
+    }
+
+    
+    return NextResponse.json({ message: "Unauthorized: Action not permitted" }, { status: 403 });
   } catch (error) {
-    console.error("Error canceling application:", error);
-    return NextResponse.json({ message: "Failed to cancel application" }, { status: 500 });
+    console.error("Error in DELETE handler:", error);
+    return NextResponse.json({ message: "Failed to process DELETE request" }, { status: 500 });
   }
 }
-
-
-
-
-
-
-

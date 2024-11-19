@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { FiCheck, FiMail, FiCalendar, FiClock, FiMapPin, FiInfo, FiList, FiFileText, FiEdit, FiX } from "react-icons/fi";
-import { FiBriefcase, FiHeart, FiCoffee, FiUsers, FiBook, FiGlobe, FiBox, FiActivity, FiSmile } from "react-icons/fi";
+import { FiTrash2, FiBriefcase, FiHeart, FiCoffee, FiUsers, FiBook, FiGlobe, FiBox, FiActivity, FiSmile } from "react-icons/fi";
 import { MdEvent, MdBusiness } from "react-icons/md";
 import Loader from "@components/Loader";
 
@@ -27,6 +27,11 @@ export default function EventDetails() {
   const [applicationSubmitted, setApplicationSubmitted] = useState(false);
   const [showCancelConfirmationModal, setShowCancelConfirmationModal] = useState(false);
   const [applicationCancelled, setApplicationCancelled] = useState(false); 
+  const [showDeleteEventModal, setShowDeleteEventModal] = useState(false);
+  const [eventDeleted, setEventDeleted] = useState(false);
+
+
+
 
 
   const categoryIcons = {
@@ -52,7 +57,10 @@ export default function EventDetails() {
   
         const data = await response.json();
         setEvent(data);
-        setTempEvent(data);
+        setTempEvent({
+          ...data,
+          date: formatDate(data.date),
+        });
   
         console.log("Participants in Event:", data.participants);
   
@@ -121,7 +129,7 @@ const isVolunteer = session?.user?.role !== "organizer";
   
   const handleDeleteApplication = async () => {
     try {
-      const response = await fetch(`/api/event?eventId=${id}&userId=${session?.user?.id}`, {
+      const response = await fetch(`/api/event?eventId=${event._id}&userId=${session?.user?.id}`, {
         method: "DELETE",
       });
   
@@ -212,12 +220,36 @@ const isVolunteer = session?.user?.role !== "organizer";
 
   const isPastEvent = event && new Date(event.date) < new Date();
 
+  const handleDeleteEvent = async () => {
+    try {
+      const response = await fetch(`/api/event?eventId=${event._id}&userId=${session.user.id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to delete the event");
+      }
+  
+      setEventDeleted(true);
+
+    
+    setTimeout(() => {
+      router.push("/event-management");
+    }, 3000);
+    } catch (err) {
+      console.error("Error deleting event:", err);
+      alert("An error occurred while deleting the event. Please try again.");
+    }
+  };
+  
+
   if (loading) return <Loader />;
   if (error) return <p>{error}</p>;
   if (!event) return <p>No event details available.</p>;
 
   return (
-    <main>
+    <main className="main event-details-page">
       <div className="event-details-container">
         <section className="event-header">
           <div className="back-button">
@@ -251,10 +283,18 @@ const isVolunteer = session?.user?.role !== "organizer";
                       )}
                     </header>
 
-              <div className="organization-info">
-                <MdBusiness className="organization-icon" />
-                <p className="organization-name">{organizationName || "Organizer"}</p>
-              </div>
+                    <div className="organization-info">
+                      <MdBusiness className="organization-icon" />
+                      {organizationName ? (
+                        <Link href={`/organization-management?id=${event.organizer}`}>
+                          <a className="organization-name clickable">{organizationName}</a> 
+                        </Link>
+                      ) : (
+                        <p className="organization-name">Organizer</p>
+                      )}
+                    </div>
+
+
             {isEditing ? (
               <select
               
@@ -264,7 +304,7 @@ const isVolunteer = session?.user?.role !== "organizer";
                 required
               >
                 <option value="">Select Category</option>
-                <option value="Animal_care">Animal Care</option>
+                <option value="Animal_Care">Animal Care</option>
                 <option value="Arts">Arts & Culture</option>
                 <option value="Community">Community</option>
                 <option value="Education">Education</option>
@@ -318,7 +358,15 @@ const isVolunteer = session?.user?.role !== "organizer";
                     <button onClick={handleCancelClick} className="cancel-button"><FiX /> Cancel</button>
                   </>
                 ) : (
+                  <>
                   <button onClick={handleEditClick} className="event-edit-button"><FiEdit /> Edit</button>
+                  <button
+                      onClick={() => setShowDeleteEventModal(true)}
+                      className="delete-event-button"
+                    ><FiTrash2/>
+                      Delete Event
+                    </button>
+                  </>
                 )
               )}
             </div>
@@ -509,6 +557,49 @@ const isVolunteer = session?.user?.role !== "organizer";
             <button onClick={() => window.location.reload()}>OK</button>
           </div>
         )}
+
+        {showDeleteEventModal && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <button
+                className="close-modal"
+                onClick={() => setShowDeleteEventModal(false)}
+              >
+                &times;
+              </button>
+              <h2 className="modal-header">Delete Event</h2>
+              <p className="modal-content">
+                Are you sure you want to delete this event? This action cannot be undone.
+              </p>
+              <div className="modal-buttons">
+                <button
+                  className="confirm-button"
+                  onClick={() => {
+                    handleDeleteEvent(); 
+                    setShowDeleteEventModal(false);
+                  }}
+                >
+                  Yes
+                </button>
+                <button
+                  className="cancel-button-app"
+                  onClick={() => setShowDeleteEventModal(false)}
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+
+          {eventDeleted && (
+            <div className="success-message">
+              <p>Your event has been successfully deleted!</p>
+              <button onClick={() => router.push("/event-management")}>OK</button>
+            </div>
+          )}
+
 
 
     </main>

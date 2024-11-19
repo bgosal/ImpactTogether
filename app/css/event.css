@@ -1,9 +1,22 @@
+main.event-details-page {
+  background-image: url('/images/event5.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+
+  
+}
+
+
+
+
 .event-details-container {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   padding-top: 30px;
-  margin-left: 10%; 
+  margin-left: 50px; 
   width: auto;
   overflow: hidden; 
 }
@@ -38,15 +51,28 @@
 .event-title {
   margin: 0;
   font-weight: bold;
-  color: #5783c4;
+  color: #4A90E2;
   white-space: nowrap; 
   overflow: hidden; 
   max-width: 100%; 
   box-sizing: border-box;
 
   font-size: clamp(20px, 4vw, 50px);
+  background-color: #fff;
+  border: 1px solid #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding:16px;
+  max-width: fit-content;
+  /* transition: transform 0.3s ease, box-shadow 0.3s ease; */
+  
   
 }
+
+/* .event-title:hover {
+  transform: scale(1.05); 
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); 
+} */
 
 
 .organization-name {
@@ -54,6 +80,8 @@
   font-size: 30px;
   color: #666;
 }
+
+
 
 .button-group {
   display: flex;
@@ -68,7 +96,7 @@
 
 
 
-.contact-button, .apply-now-button, .event-edit-button, .cancel-application-button{
+.contact-button, .apply-now-button, .event-edit-button, .cancel-application-button, .delete-event-button{
   display: flex;
   align-items: center; 
   justify-content: center; 
@@ -79,6 +107,7 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 18px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .contact-button{
@@ -90,25 +119,33 @@
 .contact-button:hover {
   background-color: #FFA500;
   color: #fff; 
+  transform: scale(1.05); 
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); 
 }
 
 .apply-now-button:hover {
   background-color: #FF8C00; 
   color: #fff; 
+  transform: scale(1.05); 
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); 
 }
 
 .event-edit-button{
 
-  background-color: #5783c4;
+  background-color: #4A90E2;
+  
 }
 
 
 .event-edit-button:hover {
-  background-color: #4169a3; 
+  background-color: #5783c4;
+  transform: scale(1.05); 
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); 
 }
 .apply-now-button svg, 
 .contact-button svg, 
-.event-edit-button svg {
+.event-edit-button svg,
+.delete-event-button svg {
   margin-right: 8px;
   vertical-align: middle; 
 }
@@ -122,7 +159,12 @@
   max-width: 1200px;
   margin-top: 20px; 
   margin-left: 95px;
+  
 }
+/* .event-details:hover{
+  transform: scale(1.05); 
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); 
+} */
 
 .event-details {
   width: 350px; 
@@ -131,6 +173,8 @@
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   flex: none; 
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
 }
 
 .event-detail,
@@ -158,7 +202,7 @@
   display: flex;
   align-items: center;
   font-size: 30px;
-  color: #5783c4;
+  color: #4A90E2;
   font-weight: bold;
   margin-top: 20px;
   margin-bottom: 20px;
@@ -307,6 +351,7 @@
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-left:60px;
 
 
 }
@@ -314,8 +359,8 @@
 .description-heading {
   display: flex;
   align-items: center;
-  font-size: 24px;
-  color: #5783c4;
+  font-size: 30px;
+  
   font-weight: bold;
   margin-bottom: 15px;
 }
@@ -363,6 +408,9 @@
     border-radius: 50%;
     object-fit: cover;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 10px solid #fff; 
+    background-color:#fff;
+    
 }
 
 
@@ -375,10 +423,15 @@
   background-color: #fff; 
   padding: 8px 12px;
   border-radius: 8px; 
- 
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
   max-width: fit-content; 
+  /* transition: transform 0.3s ease, box-shadow 0.3s ease; */
 }
+
+/* .event-category:hover{
+  transform: scale(1.05); 
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); 
+} */
 
 .event-category svg {
   margin-right: 8px;
@@ -389,8 +442,22 @@
 .organization-info {
   display: flex;
   align-items: center;
-  margin-top: 5px; 
+  margin-top: 20px; 
+  border: 1px solid #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding:16px;
+  background-color: #fff;
+  max-width: fit-content;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+.organization-info:hover{
+  transform: scale(1.05); 
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); 
+  color:#4A90E2;
+}
+
 
 .organization-icon {
   margin-right: 8px;
@@ -421,29 +488,31 @@
 
 .select-field {
   padding: 5px;
-    font-size: 16px;
-    margin-top: 5px;
+    font-size: 20px;
+    margin-top: 20px;
     border-radius: 4px;
     border: 1px solid #ccc;
+    
+
 }
 
 
 
-/* Modal Overlay */
+
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  background: rgba(0, 0, 0, 0.5); 
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Ensure it's above other elements */
+  z-index: 1000; 
 }
 
-/* Modal Container */
+
 .modal {
   background: #fff;
   width: 90%;
@@ -490,7 +559,7 @@
 }
 
 .confirm-button,
-.cancel-button-app {
+.cancel-button-app, .delete-event-button {
   background: #FFA500;
   color: white;
   border: none;
@@ -519,6 +588,27 @@
   background: #e53935;
 }
 
+
+
+.cancel-application-button, .delete-event-button {
+  background-color: #ff6b6b; 
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  
+  
+}
+
+.cancel-application-button:hover, .delete-event-button:hover {
+  background-color: #ff4c4c;
+  transform: scale(1.05); 
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); 
+
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -529,23 +619,6 @@
     transform: translateY(0);
   }
 }
-
-.cancel-application-button {
-  background-color: #ff6b6b; 
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.2s ease;
-}
-
-.cancel-application-button:hover {
-  background-color: #ff4c4c;
-}
-
-
 
 .success-message {
   position: fixed;
@@ -576,4 +649,8 @@
 
 .success-message button:hover {
   background-color: #FF8C00;
+}
+
+.delete-event-button{
+  width: 200px;
 }

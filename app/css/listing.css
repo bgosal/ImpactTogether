@@ -1,3 +1,11 @@
+.recruit-page{
+
+  background-image: url('/images/listing.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .event-form-container {
     max-width: 600px;
     margin: 0 auto;
@@ -12,7 +20,7 @@
     font-size: 75px;
     font-weight: bold;
     margin-bottom: 20px;
-    color: #5783c4;
+    color:  #4A90E2;
     text-align: center;
   }
   
@@ -21,7 +29,7 @@
     font-size: 25px;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #5783c4;
+    color:  #4A90E2;
     align-items: center;
     justify-content: center; 
 }
@@ -80,7 +88,7 @@
     padding: 12px;
     font-size: 1rem;
     color: #fff;
-    background-color: #5783c4;
+    background-color: #4A90E2;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -88,7 +96,7 @@
   }
   
   .event-submit-button:hover {
-    background-color: #365a9d;
+    background-color: #5783c4;
   }
 
 

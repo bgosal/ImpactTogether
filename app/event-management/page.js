@@ -35,11 +35,11 @@ export default function OrganizerEventsList() {
   useEffect(() => {
     const fetchEvents = async () => {
       if (!session?.user?.id) return;
-
+  
       try {
         const response = await fetch(`/api/event?organizerId=${encodeURIComponent(session.user.id)}`);
         if (!response.ok) throw new Error("Failed to fetch events");
-
+  
         const data = await response.json();
         setEvents(data);
       } catch (err) {
@@ -49,9 +49,10 @@ export default function OrganizerEventsList() {
         setLoading(false);
       }
     };
-
+  
     fetchEvents();
   }, [session]);
+  
 
   if (loading) return <Loader />;
   if (error) return <p>{error}</p>;
@@ -150,25 +151,30 @@ export default function OrganizerEventsList() {
       <h2 style={{ background: "none" }}>Participants</h2>
 
       <div className="participants-list">
-        {event.participants && event.participants.length > 0 ? (
+        {event?.participants?.length > 0 ? (
           event.participants.map((participant) => (
             <div key={participant._id} className="participant-item">
-              <Image 
-                src={participant.profilePicture || "https://dummyimage.com/100"} 
+              <Image
+                src={participant.profilePicture || "https://dummyimage.com/100"}
                 alt={`${participant.firstname} ${participant.lastname}`}
-                width={100} 
+                width={100}
                 height={100}
                 className="participant-image"
               />
               <div className="participant-info">
-                <h3 className="participant-name">{`${participant.firstname} ${participant.lastname}`}</h3>
+                <h3 className="participant-name">
+                  <Link href={`/account-management?id=${participant._id}`}>
+                    {participant.firstname} {participant.lastname}
+                  </Link>
+                </h3>
               </div>
             </div>
           ))
-              ) : (
-                <p>No participants yet.</p>
-              )}
-            </div>
+        ) : (
+          <p>No participants yet.</p>
+        )}
+      </div>
+
           </div>
         </div>
       )}

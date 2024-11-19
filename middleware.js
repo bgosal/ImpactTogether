@@ -4,14 +4,27 @@ import { NextResponse } from "next/server";
 export default withAuth(
   async function middleware(req) {
     const { token } = req.nextauth;
-
     const path = req.nextUrl.pathname;
 
-    if ((path.startsWith("/account-management") || path.startsWith("/saved")) && token?.role !== "volunteer") {
-      return NextResponse.redirect(new URL("/", req.url));
+    
+    if (path.startsWith("/account-management/")) {
+      const isEditing = req.nextUrl.searchParams.get("edit"); 
+      if (isEditing === "true" && token?.role !== "volunteer") {
+        return NextResponse.redirect(new URL("/", req.url));
+      }
     }
 
-    if ((path.startsWith("/organization-management") || path.startsWith("/recruit")) && token?.role !== "organizer") {
+    
+    if (path.startsWith("/organization-management")) {
+      const isEditing = req.nextUrl.searchParams.get("edit"); 
+      if (isEditing === "true" && token?.role !== "organizer") {
+     
+        return NextResponse.redirect(new URL("/", req.url));
+      }
+    }
+
+    
+    if (path.startsWith("/recruit") && token?.role !== "organizer") {
       return NextResponse.redirect(new URL("/", req.url));
     }
 
@@ -24,7 +37,6 @@ export default withAuth(
   }
 );
 
-// These are private routes that only logged in users can access.
 export const config = {
   matcher: [
     "/recruit/:path*",
@@ -34,5 +46,3 @@ export const config = {
     "/create-event/:path*",
   ],
 };
-
-

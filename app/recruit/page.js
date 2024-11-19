@@ -99,7 +99,7 @@ export default function Recruit() {
   };
   
   return (
-    <main>
+    <main className= "recruit-page">
       <div className="event-form-container">
         <div className="form-heading">Create New Event</div>
         <form onSubmit={handleSubmit}>

@@ -1,16 +1,19 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams} from "next/navigation";
 import { FiTrash2, FiCamera, FiEdit, FiCheck, FiX, FiMail, FiPhone, FiMapPin, FiGlobe, FiUser } from "react-icons/fi";
 import { MdEvent, MdHistory, MdStar, MdBusiness } from "react-icons/md";
 import Loader from "@components/Loader";
 
 
+
 export default function OrganizerProfile() {
     const { data: session } = useSession();
-
+    const searchParams = useSearchParams();
+    const organizerId = searchParams.get("id")|| session?.user?.id;;
     const [organizer, setOrganizer] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -20,10 +23,36 @@ export default function OrganizerProfile() {
     const [tempAchievements, setTempAchievements] = useState("");
     const [file, setFile] = useState([]);
     const DEFAULT_PICTURE = "/images/org.png";
-
-
     const fileInputRef = useRef(null); 
     const router = useRouter();
+
+    const [upcomingEvents, setUpcomingEvents] = useState([]);
+    const [pastEvents, setPastEvents] = useState([]);
+
+    useEffect(() => {
+    const fetchEvents = async () => {
+        try {
+            const fetchUpcoming = fetch(`/api/event-preview?organizerId=${organizerId}&type=upcoming&limit=3`);
+            const fetchPast = fetch(`/api/event-preview?organizerId=${organizerId}&type=past&limit=3`);
+
+        const [upcomingRes, pastRes] = await Promise.all([fetchUpcoming, fetchPast]);
+
+        if (!upcomingRes.ok || !pastRes.ok) {
+            throw new Error("Failed to fetch events");
+        }
+
+        const upcomingData = await upcomingRes.json();
+        const pastData = await pastRes.json();
+
+        setUpcomingEvents(upcomingData);
+        setPastEvents(pastData);
+        } catch (error) {
+        console.error("Error fetching events:", error);
+        }
+    };
+
+    fetchEvents();
+    }, [organizerId]);
 
     useEffect(() => {
         const fetchOrganizerProfile = async () => {
@@ -35,7 +64,7 @@ export default function OrganizerProfile() {
             }
 
             try {
-                const response = await fetch(`/api/profile?id=${session.user.id}`);
+                const response = await fetch(`/api/profile?id=${organizerId}`);
                 
                 if (!response.ok) {
                     throw new Error("Failed to fetch organizer data");
@@ -62,7 +91,10 @@ export default function OrganizerProfile() {
         };
 
         fetchOrganizerProfile();
-    }, [session, router]);
+    }, [session, organizerId, router]);
+
+
+    const isOwner = session?.user?.id === organizerId;
 
     const handleFileButtonClick = () => {
         fileInputRef.current.click();  
@@ -231,20 +263,20 @@ export default function OrganizerProfile() {
     if (!organizer) return <p>No organizer data available.</p>;
 
     return (
+        <div className="profile-page-wrapper">
         <main className="profile-page">
             <section className="profile-card">
                 <div className="profile-picture">
                     <img src={tempProfile.profilePicture || DEFAULT_PICTURE} alt="Organizer Profile" />
                     
                    
-                    {isEditingProfile && (
+                    {isOwner && isEditingProfile && (
                         <>
                             <button className="change-picture-button" onClick={handleFileButtonClick}>
                                 <FiCamera style={{ marginRight: "8px" }} /> Change Profile Picture
                             </button>
-                            
-                            <button className="delete-picture-button" onClick={handleDeleteProfilePicture}>
-                                <FiTrash2 /> Delete Profile Picture
+                            <button className="delete-picture-button" onClick={() => setTempProfile((prev) => ({ ...prev, profilePicture: DEFAULT_PICTURE }))}>
+                                <FiTrash2 /> Reset Profile Picture
                             </button>
                         </>
                     )}
@@ -261,20 +293,24 @@ export default function OrganizerProfile() {
                     />
 
                     
-                </div>
+                    </div>
 
 
-                <div className="profile-info">
+                    <div className="profile-info">
                     <h1 className="profile-name">
                         <MdBusiness className="icon name-icon" /> 
-                        {isEditingProfile ? (
+                        {isOwner && isEditingProfile ? (
                             <input
                                 type="text"
                                 value={tempProfile.organizationName || ""}
-                                onChange={(e) => handleProfileChange("organizationName", e.target.value)}
+                                onChange={(e) => setTempProfile((prev) => ({ ...prev, organizationName: e.target.value }))}
                             />
                         ) : (
-                            organizer.organizationName || <span className="placeholder-text">Add Organization Name</span>
+                            organizer.organizationName || (
+                                <span className="placeholder-text">
+                                    {isOwner ? "Add Organization Name" : "No Organization Name"}
+                                </span>
+                            )
                         )}
                     </h1>
 
@@ -288,7 +324,11 @@ export default function OrganizerProfile() {
                                     onChange={(e) => handleProfileChange("email", e.target.value)}
                                 />
                             ) : (
-                                organizer.email || <span className="placeholder-text">Add Email</span>
+                                organizer.email || (
+                                    <span className="placeholder-text">
+                                        {isOwner ? "Add Email" : "No Email"}
+                                    </span>
+                                )
                             )}
                         </p>
                         <p>
@@ -298,10 +338,14 @@ export default function OrganizerProfile() {
                                     type="text"
                                     value={tempProfile.phone || ""}
                                     onChange={(e) => handleProfileChange("phone", e.target.value)}
-                                    placeholder="Add Phone Number" 
+                                    placeholder="Add Phone Number"
                                 />
                             ) : (
-                                organizer.phone || <span className="placeholder-text">Add Phone Number</span>
+                                organizer.phone || (
+                                    <span className="placeholder-text">
+                                        {isOwner ? "Add Phone Number" : "No Phone"}
+                                    </span>
+                                )
                             )}
                         </p>
                         <p>
@@ -311,10 +355,14 @@ export default function OrganizerProfile() {
                                     type="text"
                                     value={tempProfile.location || ""}
                                     onChange={(e) => handleProfileChange("location", e.target.value)}
-                                    placeholder="Add Location" 
+                                    placeholder="Add Location"
                                 />
                             ) : (
-                                organizer.location || <span className="placeholder-text">Add Location</span>
+                                organizer.location || (
+                                    <span className="placeholder-text">
+                                        {isOwner ? "Add Location" : "No Location"}
+                                    </span>
+                                )
                             )}
                         </p>
                         <p>
@@ -328,7 +376,11 @@ export default function OrganizerProfile() {
                                 />
                             ) : (
                                 <a href={organizer.website} target="_blank" rel="noopener noreferrer">
-                                    {organizer.website || <span className="placeholder-text">Add Website</span>}
+                                    {organizer.website || (
+                                        <span className="placeholder-text">
+                                            {isOwner ? "Add Website" : "No Website"}
+                                        </span>
+                                    )}
                                 </a>
                             )}
                         </p>
@@ -346,53 +398,96 @@ export default function OrganizerProfile() {
                                 placeholder="Add Bio"
                             />
                         ) : (
-                            <p>{organizer.bio || <span className="placeholder-text">Add Bio</span>}</p>
+                            <p>
+                                {organizer.bio || (
+                                    <span className="placeholder-text">
+                                        {isOwner ? "Add Bio" : "No Bio"}
+                                    </span>
+                                )}
+                            </p>
                         )}
                     </div>
 
-                    <button className="contact-button">Contact</button>  
+                    <button
+                        className="contact-button"
+                        onClick={() => window.location.href = `mailto:${data.email}`}
+                        >
+                            Contact
+                    </button>  
 
-                    {isEditingProfile ? (
+                    {isOwner && (
                         <div className="profile-edit-controls">
-                            <button onClick={handleProfileSaveClick} className="save-button"><FiCheck /></button>
-                            <button onClick={handleProfileCancelClick} className="cancel-button"><FiX /></button>
+                            {isEditingProfile ? (
+                                <>
+                                    <button onClick={handleProfileSaveClick} className="save-button">
+                                        <FiCheck />
+                                    </button>
+                                    <button onClick={handleProfileCancelClick} className="cancel-button">
+                                        <FiX /> 
+                                    </button>
+                                </>
+                            ) : (
+                                <button onClick={handleProfileEditClick} className="edit-button">
+                                    <FiEdit /> 
+                                </button>
+                            )}
                         </div>
-                    ) : (
-                        <button onClick={handleProfileEditClick} className="edit-button"><FiEdit /></button>
                     )}
+
                 </div>
             </section>
 
             <div className="bottom-row">
                 <section className="info-card">
-                    <h2><MdEvent className="tile-icon" /> Upcoming Events</h2>
-                    <ul>
-                        {organizer.upcomingEvents?.length
-                            ? organizer.upcomingEvents.map((event, index) => (
-                                <li key={index}>
-                                    <strong>{event.name}</strong> - {event.date} at {event.location}
-                                </li>
-                            ))
-                            : <span className="placeholder-text">No upcoming events</span>}
-                    </ul>
+                <h2><MdEvent className="tile-icon" /> Upcoming Events</h2>
+                <div className="event-list">
+                    {upcomingEvents.length > 0 ? (
+                    upcomingEvents.map((event) => (
+                        <div className="event-card" key={event._id}>
+                        <div className="event-icon-i">
+                            <MdEvent className="event-card-icon" />
+                        </div>
+                        <div className="event-content">
+                            <Link href={`/events/${event._id}`}>
+                            <h3 className="event-name clickable">{event.eventName}</h3>
+                            </Link>
+                        </div>
+                        </div>
+                    ))
+                    ) : (
+                    <span className="placeholder-text">No upcoming events</span>
+                    )}
+                </div>
                 </section>
 
                 <section className="info-card">
-                    <h2><MdHistory className="tile-icon" /> Past Events</h2>
-                    <ul>
-                        {organizer.pastEvents?.length
-                            ? organizer.pastEvents.map((event, index) => (
-                                <li key={index}>
-                                    <strong>{event.name}</strong>: {event.volunteers || event.fundsRaised} | {event.impact}
-                                </li>
-                            ))
-                            : <span className="placeholder-text">No past events</span>}
-                    </ul>
+                <h2><MdHistory className="tile-icon" /> Past Events</h2>
+                <div className="event-list">
+                    {pastEvents.length > 0 ? (
+                    pastEvents.map((event) => (
+                        <div className="event-card" key={event._id}>
+                        <div className="event-icon-i">
+                            <MdHistory className="event-card-icon" />
+                        </div>
+                        <div className="event-content">
+                            <Link href={`/events/${event._id}`}>
+                            <h3 className="event-name clickable">{event.eventName}</h3>
+                            </Link>
+                        </div>
+                        </div>
+                    ))
+                    ) : (
+                    <span className="placeholder-text">No past events</span>
+                    )}
+                </div>
                 </section>
+
+
+
 
                 <section className="info-card">
                     <h2><MdStar className="tile-icon" /> Achievements</h2>
-                    {isEditingAchievements ? (
+                    {isOwner && isEditingAchievements ? (
                         <div>
                             <textarea
                                 value={tempAchievements}
@@ -407,17 +502,25 @@ export default function OrganizerProfile() {
                     ) : (
                         <div>
                             <ul>
-                                {organizer.achievements?.length
-                                    ? organizer.achievements.map((achievement, index) => (
+                                {organizer.achievements?.length ? (
+                                    organizer.achievements.map((achievement, index) => (
                                         <li key={index}>{achievement}</li>
                                     ))
-                                    : <span className="placeholder-text">Add Achievements</span>}
+                                ) : (
+                                    <span className="placeholder-text">
+                                        {isOwner ? "Add Achievements" : "No Achievements"}
+                                    </span>
+                                )}
                             </ul>
-                            <button onClick={handleEditAchievementsClick} className="edit-button"><FiEdit /></button>
+                            {isOwner && !isEditingAchievements && (
+                                <button onClick={handleEditAchievementsClick} className="edit-button"><FiEdit /></button>
+                            )}
                         </div>
                     )}
                 </section>
+
             </div>
         </main>
+        </div>
     );
 }

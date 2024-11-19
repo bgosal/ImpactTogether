@@ -13,14 +13,14 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   font-size: 75px;
   font-weight: bold;
-  color: #5783c4;
+  color: #4A90E2;
   text-align: center;
 }
 
 .events-section-heading {
   font-size: 28px;
   font-weight: bold;
-  color: #5783c4;
+  color: #4A90E2;
   cursor: pointer;
   margin: 30px 0 15px;
 }
@@ -81,7 +81,7 @@ ul {
 
 .event-item a {
   font-size: 16px;
-  color: #5783c4;
+  color: #4A90E2;
   text-decoration: none;
   margin: 0 auto 10px;
   text-align: center; 
@@ -154,7 +154,7 @@ button {
 }
 
 .filter-toggle {
-  background-color: #5783c4;
+  background-color: #4A90E2;
   color: white;
   padding: 10px 20px;
   font-size: 16px;
@@ -165,7 +165,7 @@ button {
   }
 
 .filter-toggle:hover {
-  background-color: #466a9e;
+  background-color: #5783c4;
 }
   
  
@@ -225,7 +225,8 @@ button {
 }
   
 .view-participants-button { 
-  background-color: #5783c4; 
+  background-color:  #4A90E2;
+ 
 }
   
 .cancel-event-button, .cancel-app-event-button{ 
@@ -238,7 +239,7 @@ button {
 }
 
 .view-participants-button:hover {
-  background-color: #466a9e; 
+  background-color: #5783c4; 
 }
 
 .cancel-event-button:hover, .cancel-app-event-button:hover{
