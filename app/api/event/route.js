@@ -32,9 +32,12 @@ export async function GET(req) {
       const events = await Event.find({ participants: userId }).lean();
       return NextResponse.json(events, { status: 200 });
     } else {
-      const events = await Event.find({}, "eventName category date location").lean();
+      const events = await Event.find({}, "eventName category date location organizer")
+        .populate("organizer", "organizationName profilePicture") 
+        .lean();
       return NextResponse.json(events, { status: 200 });
     }
+    
   } catch (error) {
     console.error("Error fetching event(s):", error);
     return NextResponse.json({ message: "Failed to fetch event(s)" }, { status: 500 });

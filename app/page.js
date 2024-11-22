@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import Item from "@components/Item";
 import Loader from "@components/Loader";
 import Fuse from "fuse.js";
+import Link from "next/link";
+import {FiCalendar,FiMapPin,FiHeart,FiCoffee,FiUsers,FiBook,FiGlobe,FiActivity,FiSmile,FiInfo, FiBox} from "react-icons/fi";
+
 
 export default function Home() {
   const [events, setEvents] = useState([]);
@@ -12,9 +15,24 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [city, setCity] = useState("");
   const [category, setCategory] = useState("");
+ 
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const categoryIcons = {
+    Animal_Care: <span className="event-icon"><FiHeart /></span>,
+    Arts: <span className="event-icon"><FiSmile /></span>,
+    Community: <span className="event-icon"><FiUsers /></span>,
+    Education: <span className="event-icon"><FiBook /></span>,
+    Environment: <span className="event-icon"><FiGlobe /></span>,
+    Food: <span className="event-icon"><FiCoffee /></span>,
+    Health: <span className="event-icon"><FiActivity /></span>,
+    Youth: <span className="event-icon"><FiBox /></span>,
+  };
+  
+
+
 
   // Fetches events from database and removes any that have expired (Only runs on intial render)
   useEffect(() => {
@@ -46,8 +64,8 @@ export default function Home() {
 
   useEffect(() => {
     const fuse = new Fuse(events, {
-      keys: ["eventName", "location"], // Fields to search
-      threshold: 0.1, // Match sensitivity (0.1 is strictest)
+      keys: ["eventName", "organizer.organizationName", "location"],
+      threshold: 0.1, 
     });
 
     const filteredBySearch = search
@@ -56,7 +74,7 @@ export default function Home() {
 
     const filtered = filteredBySearch.filter((event) => {
       const matchesCity = city ? event.location === city : true;
-      const matchesCategory = category ? event.category === category : true;
+      const matchesCategory = category ? event.category === category : true;   
       return matchesCity && matchesCategory;
     });
 
@@ -67,7 +85,7 @@ export default function Home() {
   if (error) return <p>{error}</p>;
 
   return (
-    <main>
+    <main className="home-page">
       <section className="item-container">
         <div className="filter-section">
           <input
@@ -114,18 +132,50 @@ export default function Home() {
             <p>No events match your criteria.</p>
           ) : (
             filteredEvents.map((event) => (
-              <Item
-                key={event._id}
-                title={event.eventName}
-                category={event.category}
-                location={event.location}
-                date={event.date}
-                img={"https://dummyimage.com/100"}
-                link={`/events/${event._id}`}
-              />
-            ))
-          )}
+              <Link href={`/events/${event._id}`} key={event._id} className="event-link">
+                <div className="event-card">
+                <div className="organizer-picture">
+                  <img
+                    src={event.organizer?.profilePicture  || "/images/org.png"} 
+                    alt={`${event.eventName} Organizer`}
+                    className="organizer-image"
+                  />
+                </div>
+
+               
+                <div className="event-content">
+                  
+                  <div className="front-event-name">
+          {event.eventName.length > 15
+            ? `${event.eventName.substring(0, 15)}...`
+            : event.eventName}
         </div>
+
+
+          <div className="front-organization-name">
+           {event.organizer?.organizationName }
+          </div>
+
+          
+          <div className="front-event-details-vertical">
+            <div className="front-event-details">
+              <FiCalendar className="event-icon" /> {new Date(event.date).toLocaleDateString()}
+            </div>
+            <div className="front-event-details">
+              <FiMapPin className="event-icon" /> {event.location}
+            </div>
+            <div className="front-event-details">
+              {categoryIcons[event.category]} {event.category.replace(/_/g, " ")}
+            </div>
+          </div>
+        </div>
+      </div>
+      </Link>
+    ))
+  )}
+</div>
+
+
       </section>
     </main>
   )

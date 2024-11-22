@@ -193,20 +193,32 @@ export default function ApplicationManagementList() {
             Location:
             <select value={locationFilter} onChange={(e) => setLocationFilter(e.target.value)}>
               <option value="All">All</option>
-              <option value="richmond">Richmond</option>
-              <option value="langley">Langley</option>
+              
+                <option value="Abbotsford">Abbotsford</option>
+                <option value="Burnaby">Burnaby</option>
+                <option value="Coquitlam">Coquitlam</option>
+                <option value="Delta">Delta</option>
+                <option value="Langley">Langley</option>
+                <option value="Richmond">Richmond</option>
+                <option value="Surrey">Surrey</option>
+                <option value="Vancouver">Vancouver</option>
             </select>
           </label>
 
-          <label>
+          {/* <label>
             Event Type:
             <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
               <option value="All">All</option>
-              <option value="Workshop">Workshop</option>
-              <option value="Volunteer">Volunteer</option>
-              <option value="Networking">Networking</option>
+              <option value="Animal_Care">Animal Care</option>
+                <option value="Arts">Arts & Culture</option>
+                <option value="Community">Community</option>
+                <option value="Education">Education</option>
+                <option value="Environment">Environment</option>
+                <option value="Food">Food</option>
+                <option value="Health">Health</option>
+                <option value="Youth">Youth</option>
             </select>
-          </label>
+          </label> */}
 
           <label>
             Start Date:
@@ -264,6 +276,7 @@ export default function ApplicationManagementList() {
               ))}
             </ul>
             <div className="pagination-container">
+              <div className="pagination">
               <button onClick={() => handlePreviousPage("upcoming")} disabled={upcomingPage === 1}>
                 Previous
               </button>
@@ -271,6 +284,7 @@ export default function ApplicationManagementList() {
               <button onClick={() => handleNextPage("upcoming")} disabled={upcomingPage === totalUpcomingPages}>
                 Next
               </button>
+              </div>
             </div>
           </>
         ) : (
@@ -303,6 +317,7 @@ export default function ApplicationManagementList() {
               ))}
             </ul>
             <div className="pagination-container">
+            <div className="pagination">
               <button onClick={() => handlePreviousPage("past")} disabled={pastPage === 1}>
                 Previous
               </button>
@@ -310,6 +325,7 @@ export default function ApplicationManagementList() {
               <button onClick={() => handleNextPage("past")} disabled={pastPage === totalPastPages}>
                 Next
               </button>
+            </div>
             </div>
           </>
         ) : (

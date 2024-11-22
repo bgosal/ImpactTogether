@@ -2,6 +2,7 @@
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
+  
 }
 
 .title-container .manage-events-heading {
@@ -208,7 +209,12 @@ button {
   width: 100%;
 }
   
+    
+.edit-event-button {
+  background-color: #FFA500; 
   
+  
+}
 .event-buttons button, .cancel-app-event-button {
   padding: 8px 12px;
   font-size: 14px;
@@ -217,12 +223,12 @@ button {
   cursor: pointer;
   color: white;
   transition: background-color 0.3s ease;
-}
   
-  
-.edit-event-button {
-  background-color: #FFA500; 
 }
+
+
+  
+
   
 .view-participants-button { 
   background-color:  #4A90E2;
@@ -312,3 +318,5 @@ button {
   border-radius: 5px;
   cursor: pointer;
 }
+
+

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams,  useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react"; 
 import Image from "next/image";
 import Link from "next/link";
@@ -12,6 +12,7 @@ import Loader from "@components/Loader";
 
 export default function EventDetails() {
   const { data: session } = useSession(); 
+  const searchParams = useSearchParams();
   const router = useRouter();
   const { id } = useParams();  
   const [event, setEvent] = useState(null);
@@ -19,7 +20,8 @@ export default function EventDetails() {
   const [error, setError] = useState(null);
   const [organizationName, setOrganizationName] = useState(null);
   const [profilePicture, setProfilePicture] = useState(null); 
-  const [isEditing, setIsEditing] = useState(false);
+  const isEditingInitial = searchParams.get("edit") === "true";
+  const [isEditing, setIsEditing] = useState(isEditingInitial);
   const [tempEvent, setTempEvent] = useState({});
   const [isOrganizer, setIsOrganizer] = useState(false); 
   const [hasApplied, setHasApplied] = useState(false); 
@@ -259,8 +261,8 @@ const isVolunteer = session?.user?.role !== "organizer";
           <Image
               src={profilePicture}  
               alt={`${event.eventName} Logo`}
-              width="150"
-              height="150"
+              width="1000"
+              height="1000"
             />
           </div>
           <div className="event-title-info">

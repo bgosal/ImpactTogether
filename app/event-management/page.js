@@ -140,7 +140,7 @@ export default function OrganizerEventsList() {
 
   return (
     <main>
-      {/* Pop-up */}
+      
       {isParticipantsOpen && (
   <div className="popup-overlay">
     <div className="popup">
@@ -155,7 +155,7 @@ export default function OrganizerEventsList() {
           event.participants.map((participant) => (
             <div key={participant._id} className="participant-item">
               <Image
-                src={participant.profilePicture || "https://dummyimage.com/100"}
+                src={participant.profilePicture || "/images/stock_pp.png"}
                 alt={`${participant.firstname} ${participant.lastname}`}
                 width={100}
                 height={100}
@@ -197,20 +197,31 @@ export default function OrganizerEventsList() {
             Location:
             <select value={locationFilter} onChange={(e) => setLocationFilter(e.target.value)}>
               <option value="All">All</option>
-              <option value="richmond">Richmond</option>
-              <option value="langley">Langley</option>
+              <option value="Abbotsford">Abbotsford</option>
+                <option value="Burnaby">Burnaby</option>
+                <option value="Coquitlam">Coquitlam</option>
+                <option value="Delta">Delta</option>
+                <option value="Langley">Langley</option>
+                <option value="Richmond">Richmond</option>
+                <option value="Surrey">Surrey</option>
+                <option value="Vancouver">Vancouver</option>
             </select>
           </label>
 
-          <label>
+          {/* <label>
             Event Type:
             <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
               <option value="All">All</option>
-              <option value="Workshop">Workshop</option>
-              <option value="Volunteer">Volunteer</option>
-              <option value="Networking">Networking</option>
+              <option value="Animal_Care">Animal Care</option>
+                <option value="Arts">Arts & Culture</option>
+                <option value="Community">Community</option>
+                <option value="Education">Education</option>
+                <option value="Environment">Environment</option>
+                <option value="Food">Food</option>
+                <option value="Health">Health</option>
+                <option value="Youth">Youth</option>
             </select>
-          </label>
+          </label> */}
 
           <label>
             Start Date:
@@ -255,14 +266,21 @@ export default function OrganizerEventsList() {
                     <FiMapPin /> {event.location}
                   </div>
                   <div className="event-buttons">
-                    <button className="edit-event-button">Edit Event</button>
+                                        {/* <div>
+                                      <Link href={`/events/${event._id}?edit=true`}>
+                    
+                        <button className="edit-event-button">Edit Event</button>
+                      
+                    </Link>
+                    </div> */}
+
                     <button 
                       onClick={() => handleParticipants(event)}  
                       className="view-participants-button"
                     >
                       View Participants
                     </button>
-                    <button className="cancel-event-button">Cancel Event</button>
+                    {/* <button className="cancel-event-button">Cancel Event</button> */}
                   </div>
 
                 </li>

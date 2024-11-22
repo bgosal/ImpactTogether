@@ -371,7 +371,7 @@ export default function Profile() {
                     { title: "Achievements", icon: MdStar, field: "achievements", isList: true },
                     { title: "Certifications", icon: MdCheckCircle, field: "certifications", isList: true },
                     { title: "Languages", icon: MdLanguage, field: "languages" },
-                    { title: "Goals", icon: MdFlag, field: "goals", isList: true },
+                    // { title: "Goals", icon: MdFlag, field: "goals", isList: true },
                 ].map(({ title, icon: Icon, field, isList }, index) => (
                     <section className="info-card" key={index}>
                         <h2>
@@ -429,7 +429,10 @@ export default function Profile() {
                     </section>
                 ))}
 
-                <section className="info-card">
+
+                
+
+                {/* <section className="info-card">
                     <h2>
                         <MdEvent className="tile-icon" /> Upcoming Events
                     </h2>
@@ -453,7 +456,7 @@ export default function Profile() {
                             <span className="placeholder-text">No Recent Events</span>
                         )}
                     </p>
-                </section>
+                </section> */}
             </div>
 
         </main>

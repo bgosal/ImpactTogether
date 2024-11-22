@@ -1,5 +1,6 @@
 main.event-details-page {
   background-image: url('/images/event5.jpg'); 
+  /* background-image: url('/images/new_event.jpg');  */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
