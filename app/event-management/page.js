@@ -250,7 +250,7 @@ export default function OrganizerEventsList() {
         </header>
         {showUpcoming && paginatedUpcomingEvents.length > 0 ? (
           <>
-            <ul className="events-list">
+            <ul className="events-section-list">
               {paginatedUpcomingEvents.map((event) => (
                 <li key={event._id} className="event-item">
                   <Link href={`/events/${event._id}`}>
@@ -309,7 +309,7 @@ export default function OrganizerEventsList() {
         </header>
         {showPast && paginatedPastEvents.length > 0 ? (
           <>
-            <ul className="events-list">
+            <ul className="events-section-list">
               {paginatedPastEvents.map((event) => (
                 <li key={event._id} className="event-item">
                   <Link href={`/events/${event._id}`}>

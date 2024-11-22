@@ -11,10 +11,12 @@ import { MdEvent, MdBusiness } from "react-icons/md";
 import Loader from "@components/Loader";
 
 export default function EventDetails() {
-  const { data: session } = useSession(); 
+  const { data: session } = useSession();
+
   const searchParams = useSearchParams();
   const router = useRouter();
   const { id } = useParams();  
+
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -32,10 +34,6 @@ export default function EventDetails() {
   const [showDeleteEventModal, setShowDeleteEventModal] = useState(false);
   const [eventDeleted, setEventDeleted] = useState(false);
 
-
-
-
-
   const categoryIcons = {
     Animal_Care: <FiHeart />,
     Arts: <FiSmile />,
@@ -47,8 +45,6 @@ export default function EventDetails() {
     Youth: <FiBox />,
   };
   
-
-
   useEffect(() => {
     if (!id) return;
   
@@ -251,7 +247,7 @@ const isVolunteer = session?.user?.role !== "organizer";
   if (!event) return <p>No event details available.</p>;
 
   return (
-    <main className="main event-details-page">
+    <main className="event-details-page">
       <div className="event-details-container">
         <section className="event-header">
           <div className="back-button">

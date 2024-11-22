@@ -250,7 +250,7 @@ export default function ApplicationManagementList() {
         </header>
         {showUpcoming && paginatedUpcomingApplications.length > 0 ? (
           <>
-            <ul className="events-list">
+            <ul className="events-section-list">
               {paginatedUpcomingApplications.map((application) => (
                 <li key={application._id} className="event-item">
                   <Link href={`/events/${application._id}`}>
@@ -298,7 +298,7 @@ export default function ApplicationManagementList() {
         </header>
         {showPast && paginatedPastApplications.length > 0 ? (
           <>
-            <ul className="events-list">
+            <ul className="events-section-list">
               {paginatedPastApplications.map((application) => (
                 <li key={application._id} className="event-item">
                   <Link href={`/events/${application._id}`}>

@@ -11,23 +11,24 @@ import Loader from "@components/Loader";
 
 
 export default function OrganizerProfile() {
-    const { data: session } = useSession();
-    const searchParams = useSearchParams();
-    const organizerId = searchParams.get("id")|| session?.user?.id;;
-    const [organizer, setOrganizer] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [isEditingProfile, setIsEditingProfile] = useState(false);
-    const [tempProfile, setTempProfile] = useState({});
-    const [isEditingAchievements, setIsEditingAchievements] = useState(false);
-    const [tempAchievements, setTempAchievements] = useState("");
-    const [file, setFile] = useState([]);
-    const DEFAULT_PICTURE = "/images/org.png";
-    const fileInputRef = useRef(null); 
-    const router = useRouter();
+  const { data: session } = useSession();
+  
+  const searchParams = useSearchParams();
+  const organizerId = searchParams.get("id")|| session?.user?.id;;
+  const [organizer, setOrganizer] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [tempProfile, setTempProfile] = useState({});
+  const [isEditingAchievements, setIsEditingAchievements] = useState(false);
+  const [tempAchievements, setTempAchievements] = useState("");
+  const [file, setFile] = useState([]);
+  const DEFAULT_PICTURE = "/images/org.png";
+  const fileInputRef = useRef(null); 
+  const router = useRouter();
 
-    const [upcomingEvents, setUpcomingEvents] = useState([]);
-    const [pastEvents, setPastEvents] = useState([]);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [pastEvents, setPastEvents] = useState([]);
 
     useEffect(() => {
     const fetchEvents = async () => {
@@ -366,23 +367,24 @@ export default function OrganizerProfile() {
                             )}
                         </p>
                         <p>
-                            <FiGlobe className="icon" />
-                            {isEditingProfile ? (
-                                <input
-                                    type="text"
-                                    value={tempProfile.website || ""}
-                                    placeholder="https://example.com"
-                                    onChange={(e) => handleProfileChange("website", e.target.value)}
-                                />
-                            ) : (
-                                <Link href={organizer.website} target="_blank" rel="noopener noreferrer">
-                                    {organizer.website || (
-                                        <span className="placeholder-text">
-                                            {isOwner ? "Add Website" : "No Website"}
-                                        </span>
-                                    )}
-                                </Link>
-                            )}
+                        <FiGlobe className="icon" />
+                        {isEditingProfile ? (
+                            <input
+                                type="text"
+                                value={tempProfile.website || ""}
+                                placeholder="https://example.com"
+                                onChange={(e) => handleProfileChange("website", e.target.value)}
+                            />
+                        ) : organizer.website ? ( // Removed the outer {}
+                            <Link href={organizer.website} target="_blank" rel="noopener noreferrer">
+                                {organizer.website}
+                            </Link>
+                        ) : (
+                            <span className="placeholder-text">
+                                {isOwner ? "Add Website" : "No Website"}
+                            </span>
+                        )}
+
                         </p>
                     </div>
 

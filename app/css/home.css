@@ -1,0 +1,143 @@
+.home-page {
+  background-image: url('/images/homepage3.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat; 
+}
+
+.events-container {
+  margin: 20px 110px;
+  background-color: #ffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  backdrop-filter: blur(10px); 
+}
+
+.filter-section {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.filter-input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.filter-input:focus {
+  border-color: #007BFF;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
+  outline: none;
+}
+
+
+.filter-dropdown {
+  border: 1px solid #ccc;
+  border-radius: 8px; 
+  font-size: 16px;
+  background-color: #ffffff; 
+  color: #666666; 
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.filter-dropdown:focus, 
+.filter-dropdown:hover {
+  border-color: #007BFF;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.4); 
+  outline: none; 
+  background-color: #f9f9f9;
+}
+
+.filter-dropdown option {
+  color: #666666; 
+  background-color: #ffffff; 
+}
+
+.events-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+}
+
+.event-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.event-card {
+  display: flex;
+  align-items: flex-start; 
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  gap: 15px; 
+  overflow: hidden;
+}
+
+.event-card-image-section {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-card-image {
+  border-radius: 50%; 
+  object-fit: cover;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.event-card-content {
+  flex: 1; 
+  display: flex;
+  flex-direction: column;
+  gap: 10px; 
+}
+
+.event-card-name {
+  font-size: 20px;
+  font-weight: bold;
+  color: #4A90E2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
+}
+
+.event-card-org-name{
+  color:#666666;
+  font-size: 16px;
+}
+
+.event-card-details-section {
+  display: flex;
+  flex-direction: column; 
+  gap: 8px; 
+}
+
+.event-card-details {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #666666;
+  overflow: hidden; 
+}
+
+.event-category-icon {
+  font-size: 14px;
+  color: #FFA500;
+  margin-right: 8px;
+  display: inline-flex; 
+  align-items: center; 
+}

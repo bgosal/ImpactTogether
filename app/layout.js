@@ -5,6 +5,7 @@ import { Footer } from "@components/Footer"
 import { Righteous } from 'next/font/google'
 
 import "./css/globals.css";
+import "./css/home.css";
 import "./css/event.css";
 import "./css/authentication.css";
 import "./css/account-management.css"
