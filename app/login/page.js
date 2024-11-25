@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { signIn } from "next-auth/react"
 import Link from "next/link";
 
@@ -13,6 +14,7 @@ export default function Login() {
   } = useForm();
 
   const router = useRouter();
+  const [formError, setFormError] = useState(null);
 
   const onSubmit = async (data) => {
     const res = await signIn("credentials", {
@@ -22,17 +24,20 @@ export default function Login() {
 
     if (res.ok) {
       router.push("/");
+    } else {
+      setFormError("Invalid email or password");
     }
   };  
 
-  return (
+  return (  
     <main className="login-selection">
       <h2>Welcome to ImpactTogether</h2>
 
       <div className="login-form-container">
         <div className="form-fields" onSubmit={handleSubmit(onSubmit)}>
           <form className="login-form">
-
+            {formError && <p style={{color: "red"}}>{formError}</p>}
+            
             {/* Email */}
             <div className="form-group">
               <label htmlFor="email">Email:</label>
@@ -52,17 +57,7 @@ export default function Login() {
               <label htmlFor="password">Password:</label>
               <input
                 defaultValue=""
-                {...register("password", {
-                  required: "Password is required",
-                  validate: (value) => {
-                    if (
-                      value.length < 5 ||
-                      !value.match(/[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/)
-                    ) {
-                      return "Password must be at least 5 characters and contain at least one special character";
-                    }
-                  },
-                })}
+                {...register("password", { required: "Password is required" })}
                 type="password"
                 id="password"
                 placeholder="Password"
