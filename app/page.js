@@ -16,6 +16,8 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [sortOption, setSortOption] = useState("soonest");
+
   // Fetches events from database and removes any that have expired (Only runs on intial render)
   useEffect(() => {
     const fetchEvents = async () => {
@@ -60,8 +62,25 @@ export default function Home() {
       return matchesCity && matchesCategory;
     });
 
-    setFilteredEvents(filtered);
-  }, [search, city, category, events]);
+    const sorted = [...filtered].sort((a, b) => {
+      if (sortOption === "soonest") return new Date(a.date) - new Date(b.date);
+      if (sortOption === "farthest") return new Date(b.date) - new Date(a.date);
+      if (sortOption === "newest") return new Date(b.createdAt) - new Date(a.createdAt);
+      if (sortOption === "oldest") return new Date(a.createdAt) - new Date(b.createdAt);
+      if (sortOption === "category") return a.category.localeCompare(b.category);
+      if (sortOption === "organization")
+        return a.organizer?.organizationName?.localeCompare(
+          b.organizer?.organizationName
+        );
+      if (sortOption === "city") return a.location.localeCompare(b.location);
+      return 0; 
+    });
+
+    setFilteredEvents(sorted);
+  }, [search, city, category, events, sortOption]);
+
+
+  
 
   if (loading) return <Loader />;
   if (error) return <p>{error}</p>;
@@ -107,26 +126,41 @@ export default function Home() {
             <option value="Health">Health</option>
             <option value="Youth">Youth</option>
           </select>
+          <select
+            className="filter-dropdown"
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+          >
+            <option value="soonest">Sort: Near Future</option>
+            <option value="farthest">Sort: Distant Future</option>
+            <option value="newest">Sort: Recently Added</option>
+            <option value="oldest">Sort: Oldest Added</option>
+            <option value="category">Sort: Category</option>
+            <option value="organization">Sort: Organization</option>
+            <option value="city">Sort: City</option>
+          </select>
         </div>
 
         <div className="events-list">
           {filteredEvents.length === 0 ? (
             <p>No events match your criteria.</p>
           ) : (
-            filteredEvents.map((event) => (
-              <EventCard 
-                key={event._id}
-                img={event.organizer?.profilePicture}
-                title={event.eventName}
-                org={event.organizer?.organizationName }
-                date={event.date}
-                category={event.category}
-                location={event.location}
-                link={`/events/${event._id}`}
-              />
-            ))
+            [...filteredEvents]
+              .map((event) => (
+                <EventCard 
+                  key={event._id}
+                  img={event.organizer?.profilePicture}
+                  title={event.eventName}
+                  org={event.organizer?.organizationName}
+                  date={event.date}
+                  category={event.category}
+                  location={event.location}
+                  link={`/events/${event._id}`}
+                />
+              ))
           )}
         </div>
+
       </section>
     </main>
   )
