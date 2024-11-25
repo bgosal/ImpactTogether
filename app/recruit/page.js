@@ -21,7 +21,7 @@ export default function Recruit() {
     address: '',
     location: '',
     description: '',
-    requirements: ''
+    requirements: []
   });
 
   const [error, setError] = useState(null); 
@@ -29,10 +29,18 @@ export default function Recruit() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData((prevData) => {
+      if (name === "requirements") {
+        return {
+          ...prevData,
+          [name]: value.split('\n') 
+        };
+      }
+      return {
+        ...prevData,
+        [name]: value,
+      };
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -42,13 +50,7 @@ export default function Recruit() {
       setError("You must be logged in to create an event.");
       return;
     }
-  
     
-    const formattedRequirements = formData.requirements
-      .split('\n')
-      .map(line => line.trim())
-      .filter(line => line)
-      .join('\n');
 
     
     const formattedDescription = formData.description
@@ -64,7 +66,6 @@ export default function Recruit() {
         body: JSON.stringify({
           ...formData,
           organizer: organizerId,
-          requirements: formattedRequirements,
           description: formattedDescription,
          
         }),
@@ -88,7 +89,7 @@ export default function Recruit() {
         address: '',
         location: '',
         description: '',
-        requirements: ''
+        requirements: []
       });
 
     } catch (error) {
@@ -223,11 +224,12 @@ export default function Recruit() {
                 id="requirements"
                 name="requirements"
                 className="event-input-field"
-                placeholder="Enter event requirements"
+                placeholder="Enter event requirements, one per line"
                 rows="3"
-                value={formData.requirements}
+                value={formData.requirements.join('\n')}
                 onChange={handleChange}
               ></textarea>
+
             </div>
             
           </section>
