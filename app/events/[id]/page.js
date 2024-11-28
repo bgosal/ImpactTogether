@@ -196,11 +196,9 @@ const isVolunteer = session?.user?.role !== "organizer";
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const year = date.getFullYear();
-    return `${year}-${month}-${day}`; 
-  };
+    return date.toISOString().split('T')[0]; 
+  ß};
+
 
   const minDate = () => {
     const tomorrow = new Date();
