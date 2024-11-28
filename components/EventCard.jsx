@@ -42,7 +42,7 @@ const EventCard = ({ img, title, org, date, category, location, link}) => {
 
           <div className="event-card-details-section">
             <div className="event-card-details">
-              <FiCalendar className="event-category-icon" /> {new Date(date).toLocaleDateString()}
+              <FiCalendar className="event-category-icon" /> {new Date(date).toISOString().split('T')[0]}
             </div>
             <div className="event-card-details">
               <FiMapPin className="event-category-icon" /> {location}
