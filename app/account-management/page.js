@@ -5,7 +5,7 @@ import { useSession, } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FiTrash2,FiUserCheck, iUserCheck, FiCamera, FiMail, FiPhone, FiMapPin, FiUser, FiEdit, FiCheck, FiX } from "react-icons/fi";
 import { MdEvent, MdSchool, MdLanguage, MdStar, MdCheckCircle, MdHistory, MdFavorite, MdFlag } from "react-icons/md";
-import Loader from "@components/Loader";
+import Loader from "@/app/components/Loader";
 
 export default function Profile() {
     const { data: session } = useSession();

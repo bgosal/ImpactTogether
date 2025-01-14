@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import { FiCalendar, FiClock, FiMapPin, FiX } from "react-icons/fi";
-import Loader from "@components/Loader";
+import Loader from "@/app/components/Loader";
 
 export default function ApplicationManagementList() {
   const { data: session } = useSession();

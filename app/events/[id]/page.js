@@ -8,7 +8,7 @@ import Link from "next/link";
 import { FiCheck, FiMail, FiCalendar, FiClock, FiMapPin, FiInfo, FiList, FiFileText, FiEdit, FiX } from "react-icons/fi";
 import { FiTrash2, FiBriefcase, FiHeart, FiCoffee, FiUsers, FiBook, FiGlobe, FiBox, FiActivity, FiSmile } from "react-icons/fi";
 import { MdEvent, MdBusiness } from "react-icons/md";
-import Loader from "@components/Loader";
+import Loader from "@/app/components/Loader";
 
 export default function EventDetails() {
   const { data: session } = useSession();

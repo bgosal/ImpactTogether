@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams} from "next/navigation";
 import { FiTrash2, FiCamera, FiEdit, FiCheck, FiX, FiMail, FiPhone, FiMapPin, FiGlobe, FiUser } from "react-icons/fi";
 import { MdEvent, MdHistory, MdStar, MdBusiness } from "react-icons/md";
-import Loader from "@components/Loader";
+import Loader from "@/app/components/Loader";
 
 
 
