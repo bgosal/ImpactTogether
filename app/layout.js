@@ -1,6 +1,6 @@
-import { Provider } from "@components/Provider"
-import { NavBar } from "@components/NavBar"
-import { Footer } from "@components/Footer"
+import { Provider } from "@/app/components/Provider"
+import { NavBar } from "@/app/components/NavBar"
+import { Footer } from "@/app/components/Footer"
 
 import { Righteous } from 'next/font/google'
 

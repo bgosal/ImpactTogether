@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import EventCard from "@components/EventCard";
-import Loader from "@components/Loader";
+import EventCard from "@/app/components/EventCard";
+import Loader from "@/app/components/Loader";
 import Fuse from "fuse.js";
 
 export default function Home() {
