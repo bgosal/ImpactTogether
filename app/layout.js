@@ -1,5 +1,5 @@
 import { Provider } from "@components/Provider"
-import { Navbar } from "@components/NavBar"
+import { NavBar } from "@components/NavBar"
 import { Footer } from "@components/Footer"
 
 import { Righteous } from 'next/font/google'
@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className={righteous.className}>
       <body>
         <Provider>
-          <Navbar />
+          <NavBar />
             {children}
           <Footer /> 
         </Provider>
