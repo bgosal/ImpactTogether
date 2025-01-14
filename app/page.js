@@ -5,6 +5,7 @@ import EventCard from "@/app/components/EventCard";
 import Loader from "@/app/components/Loader";
 import Fuse from "fuse.js";
 
+
 export default function Home() {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);

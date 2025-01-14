@@ -6,6 +6,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { FiTrash2,FiUserCheck, iUserCheck, FiCamera, FiMail, FiPhone, FiMapPin, FiUser, FiEdit, FiCheck, FiX } from "react-icons/fi";
 import { MdEvent, MdSchool, MdLanguage, MdStar, MdCheckCircle, MdHistory, MdFavorite, MdFlag } from "react-icons/md";
 import Loader from "@/app/components/Loader";
+import Image from "next/image";
+
 
 export default function Profile() {
     const { data: session } = useSession();
@@ -194,10 +196,14 @@ export default function Profile() {
         <main className="profile-page">
     <section className="profile-card">
         <div className="profile-picture">
-            <img
-                src={tempUser.profilePicture || DEFAULT_PICTURE}
-                alt="Profile"
+        <Image
+            src={tempUser.profilePicture || DEFAULT_PICTURE}
+            alt="Profile"
+            width={150} 
+            height={150}
+            layout="intrinsic"
             />
+
             {isOwnProfile && isEditingProfile && (
                <>            
                                 <button

@@ -70,7 +70,7 @@ export default function Login() {
           </form>
         </div>
         
-        <p>Don't have an account?</p>
+        <p>Don&apos;t have an account?</p> 
         <div className="registration-button">
           <Link href="/register">
             <button className="signup-button">Sign Up</button>
