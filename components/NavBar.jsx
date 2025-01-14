@@ -3,7 +3,7 @@
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 
-export const Navbar = () => {
+export const NavBar = () => {
   const { data: session } = useSession();
 
   return (
