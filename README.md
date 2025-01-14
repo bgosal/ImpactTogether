@@ -1,7 +1,4 @@
-Levi de Greeff 300171992 <br>
-Bhupinder Gosal 300140608 <br>
-Jasraj Gosal 300192696 <br>
-Taylor Young 300191437 <br>
+
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
