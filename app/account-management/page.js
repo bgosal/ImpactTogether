@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useSession, } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FiTrash2,FiUserCheck, iUserCheck, FiCamera, FiMail, FiPhone, FiMapPin, FiUser, FiEdit, FiCheck, FiX } from "react-icons/fi";
@@ -69,7 +69,7 @@ export default function Profile() {
         };
 
         fetchUserProfile();
-    }, [userId]);
+    }, [userId,  session]);
 
     const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
