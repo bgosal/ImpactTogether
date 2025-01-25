@@ -10,14 +10,15 @@ import Image from "next/image";
 
 
 export default function Profile() {
-    const { data: session } = useSession();
+    const { data: session, status } = useSession(); 
+    const searchParams = useSearchParams();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isEditingProfile, setIsEditingProfile] = useState(false);
     const [tempUser, setTempUser] = useState({});
     const [editStates, setEditStates] = useState({});
-    const searchParams = useSearchParams();
+    
     const userId = searchParams.get("id") || session?.user?.id;
     const fileInputRef = useRef(null);
     const router = useRouter();
@@ -68,7 +69,7 @@ export default function Profile() {
         };
 
         fetchUserProfile();
-    }, [userId, session]);
+    }, [userId]);
 
     const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -192,6 +193,7 @@ export default function Profile() {
     const fullName = `${tempUser.firstname || ""} ${tempUser.lastname || ""}`.trim();
 
     return (
+        <Suspense fallback={<Loader />}>
         <div className="profile-page-wrapper2">
         <main className="profile-page">
     <section className="profile-card">
@@ -467,5 +469,6 @@ export default function Profile() {
 
         </main>
         </div>
+        </Suspense>
     );
 }
